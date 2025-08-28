@@ -1,0 +1,13 @@
+{
+  "itemGroup.rustedcomputer": "Example Mod Tab",
+  "block.rustedcomputer.example_block": "Example Block",
+  "item.rustedcomputer.example_item": "Example Item",
+
+  "rustedcomputer.configuration.title": "Rusted Computer Configs",
+  "rustedcomputer.configuration.section.rustedcomputer.common.toml": "Rusted Computer Configs",
+  "rustedcomputer.configuration.section.rustedcomputer.common.toml.title": "Rusted Computer Configs",
+  "rustedcomputer.configuration.items": "Item List",
+  "rustedcomputer.configuration.logDirtBlock": "Log Dirt Block",
+  "rustedcomputer.configuration.magicNumberIntroduction": "Magic Number Text",
+  "rustedcomputer.configuration.magicNumber": "Magic Number"
+}
