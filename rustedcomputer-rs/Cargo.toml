@@ -9,3 +9,4 @@ repository = "https://github.com/TheBlckbird/rustedcomputer"
 readme = "Readme.md"
 
 [dependencies]
+thiserror = "2.0.16"
