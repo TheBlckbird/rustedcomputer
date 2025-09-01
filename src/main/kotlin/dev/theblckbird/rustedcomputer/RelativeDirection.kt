@@ -20,6 +20,18 @@ enum class RelativeDirection {
                 else -> null
             }
         }
+
+        fun fromString(string: String): RelativeDirection? {
+            return when(string.lowercase()) {
+                "top" -> TOP
+                "bottom" -> BOTTOM
+                "left" -> LEFT
+                "right" -> RIGHT
+                "front" -> FRONT
+                "back" -> BACK
+                else -> null
+            }
+        }
     }
 
     fun toInt(): Int {

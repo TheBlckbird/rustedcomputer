@@ -15,7 +15,6 @@ class SetRedstoneOutput(
 ) : Command {
     override fun run(level: ServerLevel): String {
         val blockState = level.getBlockState(computerPosition)
-
         val computer = ComputerBlock.getBlockEntity(level, computerPosition)
 
         if (computer == null) {
