@@ -10,8 +10,9 @@ import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.RelativeDirection
 import dev.theblckbird.rustedcomputer.computer.ComputerObservations
 import dev.theblckbird.rustedcomputer.computer.ComputerScreenHolder
-import dev.theblckbird.rustedcomputer.computer.hostfunctions.HostFunctions
 import dev.theblckbird.rustedcomputer.computer.MinecraftTimeClock
+import dev.theblckbird.rustedcomputer.computer.hostfunctions.infrastructure.FutureFunctions
+import dev.theblckbird.rustedcomputer.computer.hostfunctions.redstone.RedstoneFunctions
 import dev.theblckbird.rustedcomputer.computer.networking.toclient.stdout.StdoutData
 import dev.theblckbird.rustedcomputer.helpers.SaveFileHelper
 import kotlinx.coroutines.CoroutineScope
@@ -104,11 +105,13 @@ class ComputerBlockEntity(position: BlockPos, state: BlockState) :
 
         val wasi = WasiPreview1.builder().withOptions(options).build()
 
-        val hostFunctions = HostFunctions()
+        val redstoneFunctions = RedstoneFunctions(level, blockPos)
+        val futureFunctions = FutureFunctions()
 
         val store = Store()
             .addFunction(*wasi.toHostFunctions())
-            .addFunction(*hostFunctions.toHostFunctions())
+            .addFunction(*redstoneFunctions.toHostFunctions())
+            .addFunction(*futureFunctions.toHostFunctions())
 
         val resourceManager = level.server.resourceManager
         val romFileLocation = ResourceLocation.fromNamespaceAndPath(RustedComputer.MODID, "rom/$fileName")
@@ -132,7 +135,7 @@ class ComputerBlockEntity(position: BlockPos, state: BlockState) :
                 )
             }
         } else {
-            writelnStdout("Couldn't find file $fileName")
+            writelnStdout("Can't find file $fileName")
         }
     }
 
