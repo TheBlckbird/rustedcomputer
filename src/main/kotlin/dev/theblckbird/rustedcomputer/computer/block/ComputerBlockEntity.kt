@@ -1,13 +1,16 @@
 package dev.theblckbird.rustedcomputer.computer.block
 
+import com.dylibso.chicory.runtime.ImportValues
+import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Store
 import com.dylibso.chicory.wasi.WasiOptions
 import com.dylibso.chicory.wasi.WasiPreview1
 import com.dylibso.chicory.wasm.Parser
 import com.dylibso.chicory.wasm.WasmModule
+import com.dylibso.chicory.wasm.types.MemoryLimits
 import dev.theblckbird.rustedcomputer.ModBlockEntities
-import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.RelativeDirection
+import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.ComputerObservations
 import dev.theblckbird.rustedcomputer.computer.ComputerScreenHolder
 import dev.theblckbird.rustedcomputer.computer.MinecraftTimeClock
@@ -35,6 +38,7 @@ import java.io.File
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.*
+import java.util.function.Function
 import kotlin.jvm.optionals.getOrNull
 
 class ComputerBlockEntity(position: BlockPos, state: BlockState) :
@@ -130,9 +134,14 @@ class ComputerBlockEntity(position: BlockPos, state: BlockState) :
         if (wasmModule != null) {
             runner = CoroutineScope(Dispatchers.Default).launch {
                 store.instantiate(
-                    UUID.randomUUID().toString(),
-                    wasmModule,
-                )
+                    UUID.randomUUID().toString()
+                ) { imports ->
+                    Instance
+                        .builder(wasmModule)
+                        .withImportValues(imports)
+                        .withMemoryLimits(MemoryLimits(0, 32))
+                        .build()
+                }
             }
         } else {
             writelnStdout("Can't find file $fileName")
