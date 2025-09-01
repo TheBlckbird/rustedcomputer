@@ -139,7 +139,7 @@ class ComputerBlockEntity(position: BlockPos, state: BlockState) :
                     Instance
                         .builder(wasmModule)
                         .withImportValues(imports)
-                        .withMemoryLimits(MemoryLimits(0, 32))
+                        .withMemoryLimits(MemoryLimits(17, 32))
                         .build()
                 }
             }
