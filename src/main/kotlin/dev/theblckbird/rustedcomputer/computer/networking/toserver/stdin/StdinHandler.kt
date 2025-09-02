@@ -17,13 +17,14 @@ object StdinHandler {
         if (computer.isProgramRunning()) {
             computer.writeStdin(data.content)
         } else {
-            var programName = data.content.trim()
+            val args = data.content.trim().split(" ")
+            var programName = args[0]
 
             if (!programName.endsWith(".wasm")) {
                 programName += ".wasm"
             }
 
-            computer.startProgram(context.player().level() as ServerLevel, programName)
+            computer.startProgram(context.player().level() as ServerLevel, programName, args)
         }
     }
 }

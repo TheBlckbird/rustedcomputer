@@ -4,8 +4,6 @@ import dev.theblckbird.rustedcomputer.computer.networking.toserver.closescreen.C
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.closescreen.CloseScreenRequest
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.openscreen.OpenScreenHandler
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.openscreen.OpenScreenRequest
-import dev.theblckbird.rustedcomputer.computer.networking.toserver.startprogram.StartProgramData
-import dev.theblckbird.rustedcomputer.computer.networking.toserver.startprogram.StartProgramHandler
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.stdin.StdinData
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.stdin.StdinHandler
 import dev.theblckbird.rustedcomputer.computer.networking.toclient.stdout.StdoutData
@@ -36,12 +34,6 @@ object ModPayloads {
             OpenScreenRequest.TYPE,
             OpenScreenRequest.STREAM_CODEC,
             OpenScreenHandler::handleRequest,
-        )
-
-        registrar.playToServer(
-            StartProgramData.TYPE,
-            StartProgramData.STREAM_CODEC,
-            StartProgramHandler::handleStart,
         )
 
         registrar.playToServer(

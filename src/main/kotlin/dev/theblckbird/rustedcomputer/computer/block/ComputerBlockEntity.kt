@@ -87,7 +87,7 @@ class ComputerBlockEntity(position: BlockPos, state: BlockState) :
      *
      * If this computer is already executing another program, it is stopped before the new one starts.
      */
-    fun startProgram(level: ServerLevel, fileName: String, vararg args: String) {
+    fun startProgram(level: ServerLevel, fileName: String, args: List<String>) {
         this.stopProgram()
 
         val fakeStdin = PipedInputStream(stdinWriter)
@@ -104,7 +104,7 @@ class ComputerBlockEntity(position: BlockPos, state: BlockState) :
                 .withStdin(fakeStdin)
                 .withStdout(stdoutWriter)
                 .withStderr(stdoutWriter)
-                .withArguments(listOf(*args))
+                .withArguments(args)
                 .build()
 
         val wasi = WasiPreview1.builder().withOptions(options).build()
