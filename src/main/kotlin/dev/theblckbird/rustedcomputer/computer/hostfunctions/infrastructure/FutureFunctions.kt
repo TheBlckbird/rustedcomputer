@@ -24,8 +24,7 @@ class FutureFunctions {
     fun poll(memory: Memory, instance: Instance, futureId: FutureId): Long {
         val future = Commands.getFuture(futureId)
         val stringifiedFuture = future.toString()
-        val alloc = instance.export("alloc")
-        val address = HostFunctionsHelpers.allocateString(stringifiedFuture, alloc, memory)
+        val address = HostFunctionsHelpers.allocateString(stringifiedFuture, instance, memory)
 
         return address
     }

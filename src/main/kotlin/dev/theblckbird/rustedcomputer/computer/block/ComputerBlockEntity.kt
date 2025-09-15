@@ -14,6 +14,7 @@ import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.ComputerObservations
 import dev.theblckbird.rustedcomputer.computer.ComputerScreenHolder
 import dev.theblckbird.rustedcomputer.computer.MinecraftTimeClock
+import dev.theblckbird.rustedcomputer.computer.hostfunctions.http.HttpFunctions
 import dev.theblckbird.rustedcomputer.computer.hostfunctions.infrastructure.FutureFunctions
 import dev.theblckbird.rustedcomputer.computer.hostfunctions.redstone.RedstoneFunctions
 import dev.theblckbird.rustedcomputer.computer.networking.toclient.stdout.StdoutData
@@ -111,11 +112,13 @@ class ComputerBlockEntity(position: BlockPos, state: BlockState) :
 
         val redstoneFunctions = RedstoneFunctions(level, blockPos)
         val futureFunctions = FutureFunctions()
+        val httpFunctions = HttpFunctions()
 
         val store = Store()
             .addFunction(*wasi.toHostFunctions())
             .addFunction(*redstoneFunctions.toHostFunctions())
             .addFunction(*futureFunctions.toHostFunctions())
+            .addFunction(*httpFunctions.toHostFunctions())
 
         val resourceManager = level.server.resourceManager
         val romFileLocation = ResourceLocation.fromNamespaceAndPath(RustedComputer.MODID, "rom/$fileName")

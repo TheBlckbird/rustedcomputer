@@ -1,8 +1,7 @@
 package dev.theblckbird.rustedcomputer.computer.hostfunctions
 
-import com.dylibso.chicory.runtime.ExportFunction
+import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Memory
-import dev.theblckbird.rustedcomputer.RustedComputer
 
 object HostFunctionsHelpers {
     /**
@@ -15,14 +14,24 @@ object HostFunctionsHelpers {
     }
 
     /**
-     * Allocates a string in WASM memory and returns the combined pointer and length.
+     * Writes a string to WASM memory and returns the combined pointer and length.
      *
      * @return The pointer and length combined to a singular `Long`
      */
-    fun allocateString(content: String, alloc: ExportFunction, memory: Memory): Long {
-        val length = content.toByteArray().count()
+    fun allocateString(content: String, instance: Instance, memory: Memory): Long {
+        return allocateByteArray(content.toByteArray(), instance, memory)
+    }
+
+    /**
+     * Writes a `ByteArray` to WASM memory and returns the combined pointer and length.
+     *
+     * @return The pointer and length combined to a singular `Long`
+     */
+    fun allocateByteArray(content: ByteArray, instance: Instance, memory: Memory): Long {
+        val alloc = instance.export("alloc")
+        val length = content.count()
         val pointer = alloc.apply(length.toLong())[0].toInt()
-        memory.writeString(pointer, content)
+        memory.write(pointer, content)
 
         return combinePointerAndLength(pointer, length)
     }

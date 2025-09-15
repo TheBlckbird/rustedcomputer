@@ -1,7 +1,11 @@
+pub use crate::http::*;
+
 pub mod async_runtime;
 pub mod side;
 pub mod functions;
 pub mod error;
+pub mod http;
+mod wasm_helpers;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn alloc(length: i32) -> i32 {
