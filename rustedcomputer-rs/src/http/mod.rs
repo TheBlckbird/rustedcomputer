@@ -10,7 +10,7 @@ mod deserialize_response;
 mod headers;
 mod method_to_int;
 
-pub fn fetch(request: Request<String>) -> http::Result<Response<String>> {
+pub fn fetch(request: Request<String>) -> crate::Result<Response<String>> {
     let extension = request.extensions();
     if !extension.is_empty() {
         panic!("Request extensions aren't supported!");

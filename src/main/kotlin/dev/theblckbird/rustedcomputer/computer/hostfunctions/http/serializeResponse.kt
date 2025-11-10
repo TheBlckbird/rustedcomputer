@@ -2,7 +2,6 @@ package dev.theblckbird.rustedcomputer.computer.hostfunctions.http
 
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Memory
-import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.hostfunctions.HostFunctionsHelpers
 import java.net.http.HttpClient
 import java.net.http.HttpHeaders
@@ -30,6 +29,7 @@ fun serializeResponse(response: HttpResponse<String>, memory: Memory, instance: 
     headersPointerLengthAsBytes.putLong(headersPointerLength)
 
     val responseSerialized = byteArrayOf(
+        ('S'.code.toByte()),
         (statusCode.toInt() shr 8).toByte(),
         (statusCode.toInt() and 0xFF).toByte(),
         version,

@@ -5,7 +5,7 @@ import com.dylibso.chicory.annotations.WasmExport
 import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Memory
-import dev.theblckbird.rustedcomputer.RustedComputer
+import dev.theblckbird.rustedcomputer.computer.hostfunctions.HostFunctionsHelpers
 import java.io.IOException
 import java.net.ConnectException
 import java.net.URI
@@ -50,12 +50,24 @@ class HttpFunctions {
 
         val request = requestBuilder.build()
 
-        val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-        val responseSerialized = serializeResponse(response, memory, instance)
+        try {
+            val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+            val responseSerialized = serializeResponse(response, memory, instance)
 
-        // TODO: Add exception handling
-
-        return responseSerialized
+            return responseSerialized
+        } catch (exception: IOException) {
+            val returnAddress = HostFunctionsHelpers.allocateString("FIO", instance, memory)
+            return returnAddress
+        } catch (exception: ConnectException) {
+            val returnAddress = HostFunctionsHelpers.allocateString("FC", instance, memory)
+            return returnAddress
+        } catch (exception: InterruptedException) {
+            val returnAddress = HostFunctionsHelpers.allocateString("FI", instance, memory)
+            return returnAddress
+        } catch (exception: SecurityException) {
+            val returnAddress = HostFunctionsHelpers.allocateString("FS", instance, memory)
+            return returnAddress
+        }
     }
 
     fun toHostFunctions(): Array<HostFunction> {
