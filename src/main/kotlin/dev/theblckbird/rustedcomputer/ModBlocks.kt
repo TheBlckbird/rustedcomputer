@@ -1,6 +1,7 @@
 package dev.theblckbird.rustedcomputer
 
 import dev.theblckbird.rustedcomputer.computer.block.ComputerBlock
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.registries.DeferredRegister
@@ -11,7 +12,7 @@ object ModBlocks {
 
     val COMPUTER = BLOCKS.register(
         "computer",
-        Supplier { ComputerBlock(BlockBehaviour.Properties.of()) }
+        Supplier { ComputerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)) }
     )
 
     // Load this class
