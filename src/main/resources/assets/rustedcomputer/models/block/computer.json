@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "rustedcomputer:block/computer_top",
+    "bottom": "rustedcomputer:block/computer_bottom",
+    "side": "rustedcomputer:block/computer_side",
+    "front": "rustedcomputer:block/computer_front"
+  }
+}
