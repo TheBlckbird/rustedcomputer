@@ -1,8 +1,11 @@
 package dev.theblckbird.rustedcomputer.computer.block
 
 import com.mojang.serialization.MapCodec
+import dev.theblckbird.rustedcomputer.DataComponents
 import dev.theblckbird.rustedcomputer.ModBlockEntities
+import dev.theblckbird.rustedcomputer.ModBlocks
 import dev.theblckbird.rustedcomputer.RelativeDirection
+import dev.theblckbird.rustedcomputer.computer.ComputerIdComponent
 import dev.theblckbird.rustedcomputer.computer.ComputerScreen
 import dev.theblckbird.rustedcomputer.computer.ComputerScreenHolder
 import net.minecraft.client.Minecraft
@@ -10,7 +13,10 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
@@ -23,6 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.phys.BlockHitResult
+import java.util.UUID
 
 class ComputerBlock(properties: Properties) : HorizontalDirectionalBlock(properties), EntityBlock {
     companion object {
@@ -139,7 +146,7 @@ class ComputerBlock(properties: Properties) : HorizontalDirectionalBlock(propert
     override fun getSignal(blockState: BlockState, blockAccess: BlockGetter, pos: BlockPos, side: Direction): Int {
         val computer = blockAccess.getBlockEntity(pos)!! as ComputerBlockEntity
 
-        val power = when(getRelativeDirection(blockState.getValue(FACING), side)) {
+        val power = when (getRelativeDirection(blockState.getValue(FACING), side)) {
             RelativeDirection.TOP -> computer.powerLevels[RelativeDirection.TOP]
             RelativeDirection.BOTTOM -> computer.powerLevels[RelativeDirection.BOTTOM]
             RelativeDirection.LEFT -> computer.powerLevels[RelativeDirection.LEFT]
@@ -149,5 +156,51 @@ class ComputerBlock(properties: Properties) : HorizontalDirectionalBlock(propert
         }
 
         return power!!
+    }
+
+    override fun onRemove(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        newState: BlockState,
+        movedByPiston: Boolean,
+    ) {
+        if (!level.isClientSide && state.block != newState.block) {
+            val blockEntity = level.getBlockEntity(pos)
+
+            if (blockEntity is ComputerBlockEntity) {
+                val dropItem = ItemStack(ModBlocks.COMPUTER.get())
+                dropItem.set(DataComponents.COMPUTER_COMPONENT, ComputerIdComponent(blockEntity.uuid.toString()))
+
+                val itemEntity = ItemEntity(level, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, dropItem)
+                itemEntity.setDefaultPickUpDelay()
+
+                level.addFreshEntity(itemEntity)
+            }
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston)
+    }
+
+    override fun setPlacedBy(
+        level: Level,
+        pos: BlockPos,
+        state: BlockState,
+        placer: LivingEntity?,
+        stack: ItemStack,
+    ) {
+        super.setPlacedBy(level, pos, state, placer, stack)
+
+        if (!level.isClientSide) {
+            val blockEntity = level.getBlockEntity(pos)
+
+            if (blockEntity is ComputerBlockEntity) {
+                val uuidString = stack.get(DataComponents.COMPUTER_COMPONENT)?.uuid ?: return
+                val uuid = UUID.fromString(uuidString)
+
+                blockEntity.uuid = uuid
+                blockEntity.setChanged()
+            }
+        }
     }
 }
