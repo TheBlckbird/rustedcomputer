@@ -1,6 +1,5 @@
 package dev.theblckbird.rustedcomputer.computer.block
 
-import com.dylibso.chicory.runtime.ImportValues
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Store
 import com.dylibso.chicory.wasi.WasiOptions
@@ -39,7 +38,6 @@ import java.io.File
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.*
-import java.util.function.Function
 import kotlin.jvm.optionals.getOrNull
 
 class ComputerBlockEntity(position: BlockPos, state: BlockState) :

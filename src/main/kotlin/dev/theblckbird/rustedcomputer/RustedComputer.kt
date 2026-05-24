@@ -19,5 +19,7 @@ class RustedComputer(modEventBus: IEventBus) {
         ModBlockEntities.register(modEventBus)
 
         ModCreativeModeTabs.register(modEventBus)
+
+        DataComponents.register(modEventBus)
     }
 }
