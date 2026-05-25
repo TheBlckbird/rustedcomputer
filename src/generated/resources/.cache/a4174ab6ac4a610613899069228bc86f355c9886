@@ -1,6 +1,8 @@
-// 1.21.1	2026-05-25T12:25:08.501915	Registrate Provider for rustedcomputer [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2026-05-25T13:22:32.208355	Registrate Provider for rustedcomputer [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 18b9633dcf3c6113a4efe367f063e574c7a66c24 assets/rustedcomputer/blockstates/computer.json
 494c19f8cb0beb1be9f82cce0a1259e5b51aad06 assets/rustedcomputer/lang/en_ud.json
 8edbee4653983b6b41ab9435380cadeef98cce40 assets/rustedcomputer/lang/en_us.json
 fc916694024223048cd89bf92efdadb23ccb9b70 assets/rustedcomputer/models/item/computer.json
+656f2971aec6f5ef3edcedf9f852aea86ccc4a81 data/rustedcomputer/advancement/recipes/misc/computer.json
 d142a9717d3a300223e4669ef54390d0eaa36267 data/rustedcomputer/loot_table/blocks/computer.json
+892c20304f93d12dfe214496c3d99531371020db data/rustedcomputer/recipe/computer.json
