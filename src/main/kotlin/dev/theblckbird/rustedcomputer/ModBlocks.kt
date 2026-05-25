@@ -18,7 +18,7 @@ object ModBlocks {
                 .pattern("IGI")
                 .pattern("IDI")
                 .define('B', Items.STONE_BUTTON)
-                .define('G', Items.GLASS)
+                .define('G', Items.GLASS_PANE)
                 .define('I', Items.IRON_INGOT)
                 .define('R', Items.REDSTONE)
                 .define('O', Items.GOLD_INGOT)
