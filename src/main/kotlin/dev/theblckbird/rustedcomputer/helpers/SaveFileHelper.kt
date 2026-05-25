@@ -8,7 +8,7 @@ import java.io.File
 object SaveFileHelper {
     fun getModDataDir(level: ServerLevel): File {
         val worldFolder = level.server.getWorldPath(LevelResource.ROOT).toFile()
-        return File(worldFolder, RustedComputer.Companion.MODID)
+        return File(worldFolder, RustedComputer.MODID)
     }
 
     fun readFile(level: ServerLevel, name: String): File {

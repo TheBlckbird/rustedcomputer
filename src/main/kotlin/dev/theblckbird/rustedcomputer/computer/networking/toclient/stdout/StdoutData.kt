@@ -11,7 +11,7 @@ data class StdoutData(val computerPosition: BlockPos, val content: String) : Cus
     companion object {
         val TYPE = CustomPacketPayload.Type<StdoutData>(
             ResourceLocation.fromNamespaceAndPath(
-                RustedComputer.Companion.MODID,
+                RustedComputer.MODID,
                 "stdout_data"
             )
         )
