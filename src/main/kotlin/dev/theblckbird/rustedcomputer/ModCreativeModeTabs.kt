@@ -9,15 +9,16 @@ import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import java.util.function.Supplier
 
+// Currently not working
+
 object ModCreativeModeTabs {
     val TAB_REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, RustedComputer.MODID)
 
     val BASE_CREATIVE_TAB: DeferredHolder<CreativeModeTab, CreativeModeTab> = TAB_REGISTRY.register("base", Supplier {
         CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.${RustedComputer.MODID}.base"))
-            .icon { ItemStack(ModItems.COMPUTER.get()) }
+            .icon { ItemStack(ModBlocks.COMPUTER.get()) }
             .displayItems { _, output ->
-                output.accept(ModItems.COMPUTER.get())
                 output.accept(ModBlocks.COMPUTER.get())
             }
             .build()

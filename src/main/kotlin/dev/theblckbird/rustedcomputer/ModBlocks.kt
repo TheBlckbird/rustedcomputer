@@ -1,22 +1,19 @@
 package dev.theblckbird.rustedcomputer
 
 import dev.theblckbird.rustedcomputer.computer.block.ComputerBlock
+import dev.theblckbird.rustedcomputer.registrate.datagens.BlockStateGen
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.state.BlockBehaviour
-import net.neoforged.bus.api.IEventBus
-import net.neoforged.neoforge.registries.DeferredRegister
-import java.util.function.Supplier
 
 object ModBlocks {
-    private val BLOCKS = DeferredRegister.createBlocks(RustedComputer.MODID)
+    val COMPUTER = RustedComputer.REGISTRATE.block("computer", ::ComputerBlock)
+        .initialProperties { Blocks.STONE }
+        .blockstate(BlockStateGen.horizontalBlockProvider(false))
+        .simpleItem()
+        .lang("Rusty Computer")
+        .register()
 
-    val COMPUTER = BLOCKS.register(
-        "computer",
-        Supplier { ComputerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)) }
-    )
-
-    // Load this class
-    fun register(modEventBus: IEventBus) {
-        BLOCKS.register(modEventBus)
-    }
+    /**
+     * Load this class
+     */
+    fun register() {}
 }
