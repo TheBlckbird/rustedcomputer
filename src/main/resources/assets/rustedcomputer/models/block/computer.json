@@ -1,9 +1,12 @@
 {
-  "parent": "minecraft:block/orientable",
+  "parent": "block/cube",
   "textures": {
-    "top": "rustedcomputer:block/computer_top",
-    "bottom": "rustedcomputer:block/computer_bottom",
-    "side": "rustedcomputer:block/computer_side",
-    "front": "rustedcomputer:block/computer_front"
+    "particle": "rustedcomputer:block/computer_front",
+    "down": "rustedcomputer:block/computer_bottom",
+    "up": "rustedcomputer:block/computer_top",
+    "north": "rustedcomputer:block/computer_front",
+    "south": "rustedcomputer:block/computer_back",
+    "east": "rustedcomputer:block/computer_side",
+    "west": "rustedcomputer:block/computer_side"
   }
 }
