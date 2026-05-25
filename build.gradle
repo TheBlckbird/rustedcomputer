@@ -46,7 +46,11 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 // These can be tweaked, removed, or duplicated as needed.
 runs {
     // applies to all the run configs below
-    configureEach {
+    configureEach { task ->
+        if (task.name.contains("BootstrapLauncher")) {
+            task.notCompatibleWithConfigurationCache("NeoForge BootstrapLauncher is not compatible with the configuration cache.")
+        }
+
         dependencies {
             runtime "com.dylibso.chicory:runtime:${chicory_version}"
             runtime "com.dylibso.chicory:wasi:${chicory_version}"
