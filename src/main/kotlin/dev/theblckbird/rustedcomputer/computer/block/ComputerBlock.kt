@@ -5,6 +5,7 @@ import dev.theblckbird.rustedcomputer.DataComponents
 import dev.theblckbird.rustedcomputer.ModBlockEntities
 import dev.theblckbird.rustedcomputer.ModBlocks
 import dev.theblckbird.rustedcomputer.RelativeDirection
+import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.ComputerIdComponent
 import dev.theblckbird.rustedcomputer.computer.ComputerScreen
 import dev.theblckbird.rustedcomputer.computer.ComputerScreenHolder
@@ -102,7 +103,7 @@ class ComputerBlock(properties: Properties) : HorizontalDirectionalBlock(propert
     override fun newBlockEntity(
         blockPosition: BlockPos, state: BlockState
     ): BlockEntity {
-        return ComputerBlockEntity(blockPosition, state)
+        return ComputerBlockEntity(ModBlockEntities.COMPUTER.get(), blockPosition, state)
     }
 
     override fun useWithoutItem(

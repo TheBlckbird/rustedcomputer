@@ -8,22 +8,12 @@ import net.neoforged.neoforge.registries.DeferredRegister
 import java.util.function.Supplier
 
 object ModBlockEntities {
-    private val BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, RustedComputer.MODID)
+    val COMPUTER = RustedComputer.REGISTRATE.blockEntity("computer", ::ComputerBlockEntity)
+        .validBlock(ModBlocks.COMPUTER)
+        .register()
 
-    val COMPUTER = BLOCK_ENTITIES.register(
-        "computer",
-        Supplier {
-            BlockEntityType.Builder.of(
-                ::ComputerBlockEntity,
-                ModBlocks.COMPUTER.get(),
-            ).build(null)
-        }
-    )
-//    val COMPUTER = RustedComputer.REGISTRATE.blockEntity("computer", ::ComputerBlockEntity)
-//        .validBlock(ModBlocks.COMPUTER)
-//        .register()
-
-    fun register(modEventBus: IEventBus) {
-        BLOCK_ENTITIES.register(modEventBus)
-    }
+    /**
+     * Load this class
+     */
+    fun register() {}
 }

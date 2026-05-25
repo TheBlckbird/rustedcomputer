@@ -31,6 +31,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.network.PacketDistributor
 import java.io.ByteArrayOutputStream
@@ -40,8 +41,8 @@ import java.io.PipedOutputStream
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-class ComputerBlockEntity(position: BlockPos, state: BlockState) :
-    BlockEntity(ModBlockEntities.COMPUTER.get(), position, state) {
+class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: BlockState) :
+    BlockEntity(type, position, state) {
     var uuid = UUID.randomUUID()
     var powerLevels: HashMap<RelativeDirection, Int> = hashMapOf(
         RelativeDirection.TOP to 0,
