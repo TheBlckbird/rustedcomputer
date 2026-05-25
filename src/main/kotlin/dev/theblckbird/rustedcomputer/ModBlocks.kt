@@ -2,6 +2,7 @@ package dev.theblckbird.rustedcomputer
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider.has
 import dev.theblckbird.rustedcomputer.computer.block.ComputerBlock
+import dev.theblckbird.rustedcomputer.computer.block.ComputerBlockItem
 import dev.theblckbird.rustedcomputer.registrate.datagens.BlockStateGen
 import net.minecraft.data.recipes.RecipeCategory
 import net.minecraft.data.recipes.ShapedRecipeBuilder
@@ -26,8 +27,9 @@ object ModBlocks {
                 .unlockedBy("has_" + context.name, has(context.get()))
                 .save(provider)
         }
-        .simpleItem()
         .lang("Rusty Computer")
+        .item(::ComputerBlockItem)
+        .build()
         .register()
 
     /**
