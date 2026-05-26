@@ -59,7 +59,7 @@ class ComputerScreen(val computerPosition: BlockPos) :
     }
 
     override fun isPauseScreen(): Boolean {
-        return false;
+        return false
     }
 
     override fun onClose() {
