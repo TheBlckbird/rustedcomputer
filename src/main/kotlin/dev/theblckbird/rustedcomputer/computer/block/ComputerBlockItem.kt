@@ -21,6 +21,13 @@ class ComputerBlockItem(block: Block, properties: Properties) : BlockItem(block,
         if (Screen.hasShiftDown()) {
             tooltipComponents.add(
                 Component
+                    .literal("[").withColor(0x4a7057)
+                    .append(Component.literal("Shift").withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal("]").withColor(0x4a7057))
+            )
+
+            tooltipComponents.add(
+                Component
                     .literal("UUID: ").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(uuid).withColor(0xC1666B))
             )
