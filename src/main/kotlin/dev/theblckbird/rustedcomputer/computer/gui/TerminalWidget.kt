@@ -50,7 +50,7 @@ class TerminalWidget(
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) return false
 
         if (Screen.isPaste(keyCode)) {
-            // paste
+            terminal.appendStdin(Minecraft.getInstance().keyboardHandler.clipboard)
 
             return true
         }
