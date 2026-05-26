@@ -4,27 +4,56 @@ class Terminal(
     /**
      * Width of the terminal in characters
      */
-    val width: Int,
+    val characters: Int,
     /**
      * Height of the terminal in characters
      */
-    val height: Int,
+    val lines: Int,
 ) {
-    private var buffer = ""
+    private var stdout = ""
+    private var stdin = ""
 
-    fun clear() {
-        buffer = ""
+    fun clearStdout() {
+        stdout = ""
     }
 
-    fun append(str: String) {
-        buffer += str
+    fun clearStdin() {
+        stdin = ""
     }
 
-    fun newline() {
-        buffer += "\n"
+    fun appendStdout(str: String) {
+        stdout += str
     }
 
-    fun getBuffer(): String {
-        return buffer
+    fun appendStdout(char: Char) {
+        stdout += char
+    }
+
+    fun newlineStdout() {
+        stdout += '\n'
+    }
+
+    fun appendStdin(str: String) {
+        stdin += str
+    }
+
+    fun appendStdin(char: Char) {
+        stdin += char
+    }
+
+    fun backspaceStdin() {
+        stdin = stdin.dropLast(1)
+    }
+
+    fun newlineStdin() {
+        stdin += '\n'
+    }
+
+    fun getStdout(): String {
+        return stdout
+    }
+
+    fun getStdin(): String {
+        return stdin
     }
 }

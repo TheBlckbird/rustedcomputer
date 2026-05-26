@@ -15,12 +15,12 @@ object TerminalFontRenderer {
     /**
      * Texture height of the font
      */
-    private const val FONT_HEIGHT = 8
+    private const val FONT_HEIGHT = 10
 
     /**
      * Height of a single character in the font texture
      */
-    const val CHAR_HEIGHT = 8
+    const val CHAR_HEIGHT = 10
 
     /**
      * Width of a single character in the font texture
@@ -35,7 +35,7 @@ object TerminalFontRenderer {
     /**
      * Spacing between the lines when rendered
      */
-    const val LINE_SPACING = 2
+    const val LINE_SPACING = 1
 
     /**
      * Map of all available characters and their index on the texture
@@ -48,16 +48,25 @@ object TerminalFontRenderer {
      *
      * Can handle newlines.
      */
-    fun drawString(graphics: GuiGraphics, text: String, x: Int, y: Int) {
+    fun drawString(
+        graphics: GuiGraphics,
+        text: String,
+        x: Int, y: Int,
+        width: Int, height: Int,
+    ) {
         graphics.pose().pushPose()
         var currentX = x
         var currentY = y
 
         for (char in text) {
-            if (char == '\n') {
+            if (char == '\n' || (currentX + CHAR_SPACING + CHAR_SPACING) > width) {
                 currentY += CHAR_HEIGHT + LINE_SPACING
                 currentX = x
-                continue
+                if (currentY > height) {
+                    break
+                } else if (char == '\n') {
+                    continue
+                }
             }
 
             val textureIndex = (getTextureIndex(char) ?: getUnknownCharacterIndex()).toFloat()
