@@ -5,10 +5,10 @@ import net.neoforged.neoforge.network.handling.IPayloadContext
 
 object StdoutHandler {
     fun handleData(data: StdoutData, context: IPayloadContext) {
-        if (ComputerScreenHolder.screen?.stdout == null) {
+        if (ComputerScreenHolder.screen?.terminal?.getBuffer() == null) {
             return
         }
 
-        ComputerScreenHolder.screen?.stdout += data.content
+        ComputerScreenHolder.screen?.terminal?.append(data.content)
     }
 }

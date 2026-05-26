@@ -1,4 +1,4 @@
-package dev.theblckbird.rustedcomputer.computer
+package dev.theblckbird.rustedcomputer.computer.gui
 
 import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.closescreen.CloseScreenRequest
@@ -16,13 +16,18 @@ import net.neoforged.neoforge.network.PacketDistributor
 class ComputerScreen(val computerPosition: BlockPos) :
     Screen(Component.translatable("screen.${RustedComputer.MODID}.computer")) {
     lateinit var messageBox: EditBox
-
-    var stdout = ""
+    lateinit var terminalWidget: TerminalWidget
+    val terminal = Terminal(40, 20)
 
     override fun init() {
         super.init()
 
-        PacketDistributor.sendToServer(OpenScreenRequest(computerPosition, 20)) // 20 is what we currently show on screen
+        PacketDistributor.sendToServer(
+            OpenScreenRequest(
+                computerPosition,
+                20
+            )
+        ) // 20 lines are what we currently show on screen
 
         val width = Minecraft.getInstance().screen!!.width
         val height = Minecraft.getInstance().screen!!.height
@@ -44,18 +49,19 @@ class ComputerScreen(val computerPosition: BlockPos) :
         )
 
         this.addRenderableWidget(messageBox)
+
+        terminalWidget = TerminalWidget(
+            10, 10,
+            terminal,
+        )
+
+        this.addRenderableWidget(terminalWidget)
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick)
 
         super.render(guiGraphics, mouseX, mouseY, partialTick)
-
-        for ((index, substring) in stdout.lines().withIndex()) {
-            guiGraphics.drawString(
-                Minecraft.getInstance().font, substring, 10, 10 * index + 10, 0xFFFFFF
-            )
-        }
     }
 
     override fun isPauseScreen(): Boolean {

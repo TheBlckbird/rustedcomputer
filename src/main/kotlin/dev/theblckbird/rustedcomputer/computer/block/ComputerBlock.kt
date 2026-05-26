@@ -7,7 +7,7 @@ import dev.theblckbird.rustedcomputer.ModBlocks
 import dev.theblckbird.rustedcomputer.RelativeDirection
 import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.ComputerIdComponent
-import dev.theblckbird.rustedcomputer.computer.ComputerScreen
+import dev.theblckbird.rustedcomputer.computer.gui.ComputerScreen
 import dev.theblckbird.rustedcomputer.computer.ComputerScreenHolder
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
