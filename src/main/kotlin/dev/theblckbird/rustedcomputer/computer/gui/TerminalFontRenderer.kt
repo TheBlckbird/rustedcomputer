@@ -1,11 +1,11 @@
 package dev.theblckbird.rustedcomputer.computer.gui
 
+import dev.theblckbird.rustedcomputer.RustedComputer
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.ResourceLocation
 
 object TerminalFontRenderer {
-    val FONT: ResourceLocation =
-        ResourceLocation.fromNamespaceAndPath("rustedcomputer", "textures/gui/terminal_font.png")
+    private val FONT = ResourceLocation.fromNamespaceAndPath(RustedComputer.MODID, "textures/gui/terminal_font.png")
 
     /**
      * Texture width of the font

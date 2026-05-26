@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants
 import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.gui.TerminalFontRenderer.CHAR_HEIGHT
 import dev.theblckbird.rustedcomputer.computer.gui.TerminalFontRenderer.CHAR_WIDTH
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarratedElementType
@@ -15,30 +16,17 @@ import org.lwjgl.glfw.GLFW
 class TerminalWidget(
     x: Int,
     y: Int,
+    val margin: Int,
     val terminal: Terminal,
     val onSubmit: (String) -> Unit,
     description: Component = Component.translatable("gui.${RustedComputer.MODID}.terminal"),
 ) : AbstractWidget(
     x, y, terminal.characters * CHAR_WIDTH, terminal.lines * CHAR_HEIGHT, description,
 ) {
-    companion object {
-        private const val MARGIN = 0
-    }
-
-    private val innerX: Int = x + MARGIN
-    private val innerY: Int = y + MARGIN
-    private val innerWidth: Int = width - MARGIN
-    private val innerHeight: Int = height - MARGIN
-
-    /*val width: Int
-        get() {
-            return innerWidth + MARGIN * 2
-        }
-
-    val height: Int
-        get() {
-            return innerHeight + MARGIN * 2
-        }*/
+    private val innerX: Int = x + margin
+    private val innerY: Int = y + margin
+    private val innerWidth: Int = width - margin
+    private val innerHeight: Int = height - margin
 
     override fun renderWidget(
         guiGraphics: GuiGraphics,
