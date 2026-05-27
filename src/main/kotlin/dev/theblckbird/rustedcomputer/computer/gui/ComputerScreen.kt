@@ -21,12 +21,15 @@ class ComputerScreen(val computerPosition: BlockPos) :
         private const val BACKGROUND_HEIGHT = 253
         private const val MARGIN = 17
 
+        private const val TERMINAL_CHARACTERS = 80
+        private const val TERMINAL_LINES = 26
+
         const val X = 10
         const val Y = 10
     }
 
     lateinit var terminalWidget: TerminalWidget
-    val terminal = Terminal(60, 20)
+    val terminal = Terminal(TERMINAL_CHARACTERS, TERMINAL_LINES)
 
     override fun init() {
         super.init()

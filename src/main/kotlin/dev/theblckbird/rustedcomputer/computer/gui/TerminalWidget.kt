@@ -16,7 +16,7 @@ import org.lwjgl.glfw.GLFW
 class TerminalWidget(
     x: Int,
     y: Int,
-    val margin: Int,
+    margin: Int,
     val terminal: Terminal,
     val onSubmit: (String) -> Unit,
     description: Component = Component.translatable("gui.${RustedComputer.MODID}.terminal"),
@@ -75,9 +75,5 @@ class TerminalWidget(
     override fun charTyped(codePoint: Char, modifiers: Int): Boolean {
         terminal.appendStdin(codePoint)
         return true
-    }
-
-    override fun keyReleased(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        return super.keyReleased(keyCode, scanCode, modifiers)
     }
 }

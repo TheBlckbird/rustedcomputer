@@ -10,7 +10,7 @@ object TerminalFontRenderer {
     /**
      * Texture width of the font
      */
-    private const val FONT_WIDTH = 515
+    private const val FONT_WIDTH = 520
 
     /**
      * Texture height of the font
@@ -41,7 +41,7 @@ object TerminalFontRenderer {
      * Map of all available characters and their index on the texture
      */
     private const val CHARACTERS =
-        "�ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß()[]{}.,;:!?<>=/\\\"'|#1234567890-+*$%@…_&~ "
+        "�ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß()[]{}.,;:!?<>=/\\\"'|#1234567890-+*$%@…_&~^ "
 
     /**
      * Draw a string at the specified position.
