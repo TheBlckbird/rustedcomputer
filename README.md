@@ -1,4 +1,4 @@
-# Rusted Computer (WIP)
+# Rusted Computer
 
 A Minecraft mod that adds programmable computers to interact with the world.
 It runs WASM and therefore supports any programming language that can target WebAssembly.
