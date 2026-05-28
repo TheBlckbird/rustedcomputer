@@ -7,7 +7,9 @@ The main target (for now) is Rust, but it is planned to provide libraries for ot
 
 ## WIP
 
-Please note that this is still work in progress and not yet usable.
+Please note that this is still very work in progress and only the most important features work.
+
+Documentation does not yet exist.
 
 # License
 
