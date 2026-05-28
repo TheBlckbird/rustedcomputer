@@ -5,7 +5,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext
 
 object StdoutHandler {
     fun handleData(data: StdoutData, context: IPayloadContext) {
-        if (ComputerScreenHolder.screen?.terminal?.getStdout() == null) {
+        if (ComputerScreenHolder.screen?.terminal?.stdout == null) {
             return
         }
 

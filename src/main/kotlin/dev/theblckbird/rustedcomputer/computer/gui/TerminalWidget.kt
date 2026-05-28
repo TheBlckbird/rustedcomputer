@@ -23,10 +23,29 @@ class TerminalWidget(
 ) : AbstractWidget(
     x, y, terminal.characters * CHAR_WIDTH, terminal.lines * CHAR_HEIGHT, description,
 ) {
-    private val innerX: Int = x + margin
-    private val innerY: Int = y + margin
-    private val innerWidth: Int = width - margin
-    private val innerHeight: Int = height - margin
+    private val innerX = x + margin
+    private val innerY = y + margin
+    private val innerWidth = width - margin
+    private val innerHeight = height - margin
+
+    private var frameTicks: Long = 0
+
+    /**
+     * The focus state in the last render frame
+     */
+    private var wasFocusedBefore = isFocused
+
+    /**
+     * Whether the cursor rendering should be forced in the next frame regardless of its blinking state
+     */
+    private var forceShowCursor = false
+
+    /**
+     * Call this function every tick from the Screen
+     */
+    fun tick() {
+        frameTicks += 1
+    }
 
     override fun renderWidget(
         guiGraphics: GuiGraphics,
@@ -36,10 +55,23 @@ class TerminalWidget(
     ) {
         TerminalFontRenderer.drawString(
             guiGraphics,
-            terminal.getStdout() + terminal.getStdin(),
+            terminal.stdout + terminal.stdin,
             innerX, innerY,
             innerWidth, innerHeight,
         )
+
+        if (isFocused) {
+            TerminalFontRenderer.drawCursor(
+                guiGraphics,
+                innerX, innerY,
+                terminal.cursorChar, terminal.cursorLine,
+                frameTicks,
+                isFocused != wasFocusedBefore || forceShowCursor,
+            )
+        }
+
+        forceShowCursor = false
+        wasFocusedBefore = isFocused
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
@@ -47,10 +79,12 @@ class TerminalWidget(
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        forceShowCursor = true
+
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) return false
 
         if (Screen.isPaste(keyCode)) {
-            terminal.appendStdin(Minecraft.getInstance().keyboardHandler.clipboard)
+            terminal.insertStdin(Minecraft.getInstance().keyboardHandler.clipboard)
 
             return true
         }
@@ -63,17 +97,21 @@ class TerminalWidget(
                 terminal.newlineStdin()
 
                 if (!Screen.hasShiftDown()) {
-                    onSubmit(terminal.getStdin())
+                    onSubmit(terminal.stdin)
                     terminal.clearStdin()
                 }
             }
+
+            InputConstants.KEY_LEFT -> terminal.moveCursorLeft()
+            InputConstants.KEY_RIGHT -> terminal.moveCursorRight()
         }
 
         return false
     }
 
     override fun charTyped(codePoint: Char, modifiers: Int): Boolean {
-        terminal.appendStdin(codePoint)
+        forceShowCursor = true
+        terminal.insertStdin(codePoint)
         return true
     }
 }

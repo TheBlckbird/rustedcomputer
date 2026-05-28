@@ -5,6 +5,24 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.ResourceLocation
 
 object TerminalFontRenderer {
+
+    private val CURSOR = ResourceLocation.fromNamespaceAndPath(RustedComputer.MODID, "textures/gui/terminal_cursor.png")
+
+    /**
+     * Width of the cursor
+     */
+    private const val CURSOR_WIDTH = 5
+
+    /**
+     * Height of the cursor
+     */
+    private const val CURSOR_HEIGHT = 10
+
+    /**
+     * Length of a complete blink cycle in ticks
+     */
+    private const val CURSOR_BLINK_CYCLE = 20
+
     private val FONT = ResourceLocation.fromNamespaceAndPath(RustedComputer.MODID, "textures/gui/terminal_font.png")
 
     /**
@@ -41,7 +59,9 @@ object TerminalFontRenderer {
      * Map of all available characters and their index on the texture
      */
     private const val CHARACTERS =
-        "�ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß()[]{}.,;:!?<>=/\\\"'|#1234567890-+*$%@…_&~^ "
+        """�ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß()[]{}.,;:!?<>=/\"'|#1234567890-+*$%@…_&~^ """
+
+    private var showCursorUntilNextCycle = false
 
     /**
      * Draw a string at the specified position.
@@ -87,6 +107,44 @@ object TerminalFontRenderer {
         }
 
         graphics.pose().popPose()
+    }
+
+    fun drawCursor(
+        graphics: GuiGraphics,
+        x: Int, y: Int,
+        char: Int, line: Int,
+        frameTicks: Long,
+        showUntilNextCycle: Boolean,
+    ) {
+        if (!showCursorUntilNextCycle && showUntilNextCycle) {
+            showCursorUntilNextCycle = true
+        }
+
+        var shouldRender = false
+
+        if (frameTicks % CURSOR_BLINK_CYCLE > (CURSOR_BLINK_CYCLE / 2)) {
+            showCursorUntilNextCycle = false
+            shouldRender = true
+        } else if (showCursorUntilNextCycle) {
+            shouldRender = true
+        }
+
+        if (shouldRender) {
+            graphics.pose().pushPose()
+
+            val xPosition = char * (CHAR_WIDTH + CHAR_SPACING) + x
+            val yPosition = line * (CHAR_HEIGHT + LINE_SPACING) + y
+
+            graphics.blit(
+                CURSOR,
+                xPosition, yPosition,
+                0F, 0F,
+                CURSOR_WIDTH, CURSOR_HEIGHT,
+                CURSOR_WIDTH, CURSOR_HEIGHT,
+            )
+
+            graphics.pose().popPose()
+        }
     }
 
     /**

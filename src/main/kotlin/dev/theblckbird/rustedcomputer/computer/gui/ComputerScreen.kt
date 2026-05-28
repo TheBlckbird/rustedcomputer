@@ -77,4 +77,9 @@ class ComputerScreen(val computerPosition: BlockPos) :
         PacketDistributor.sendToServer(CloseScreenRequest(computerPosition))
         super.onClose()
     }
+
+    override fun tick() {
+        super.tick()
+        terminalWidget.tick()
+    }
 }
