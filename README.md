@@ -15,4 +15,4 @@ Documentation does not yet exist.
 
 The code is licensed under MPL-2.0 while the font uses OFL-1.1.
 
-[See license](/LICENSE)
+[See license](/LICENSE.md)
