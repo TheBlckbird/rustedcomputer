@@ -3,7 +3,7 @@
 A Minecraft mod that adds programmable computers to interact with the world.
 It runs WASM and therefore supports any programming language that can target WebAssembly.
 
-The main target (for now) is Rust, but it is planned to provide libraries for other programming languages.
+The main target (for now) is Rust, but it is planned to provide libraries for other programming languages too.
 
 ## WIP
 
