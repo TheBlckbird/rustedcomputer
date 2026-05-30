@@ -11,7 +11,6 @@ import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import org.lwjgl.glfw.GLFW
 
 class TerminalWidget(
     x: Int,
@@ -75,21 +74,22 @@ class TerminalWidget(
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.TITLE, message);
+        narrationElementOutput.add(NarratedElementType.TITLE, message)
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        forceShowCursor = true
+        val key = InputConstants.Type.KEYSYM.getOrCreate(keyCode)
 
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) return false
+        // Let Minecraft handle the exit event when `ESC` is pressed
+        if (key.value == InputConstants.KEY_ESCAPE) return false
+
+        forceShowCursor = true
 
         if (Screen.isPaste(keyCode)) {
             terminal.insertStdin(Minecraft.getInstance().keyboardHandler.clipboard)
 
             return true
         }
-
-        val key = InputConstants.Type.KEYSYM.getOrCreate(keyCode)
 
         when (key.value) {
             InputConstants.KEY_BACKSPACE -> terminal.backspaceStdin()

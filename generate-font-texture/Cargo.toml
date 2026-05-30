@@ -1,0 +1,9 @@
+[package]
+name = "generate-font-texture"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+image = "0.25.10"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"

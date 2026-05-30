@@ -28,17 +28,17 @@ object TerminalFontRenderer {
     /**
      * Texture width of the font
      */
-    private const val FONT_WIDTH = 520
+    private const val FONT_WIDTH = 500
 
     /**
      * Texture height of the font
      */
-    private const val FONT_HEIGHT = 10
+    private const val FONT_HEIGHT = 156
 
     /**
      * Height of a single character in the font texture
      */
-    const val CHAR_HEIGHT = 10
+    const val CHAR_HEIGHT = 12
 
     /**
      * Width of a single character in the font texture
@@ -53,13 +53,13 @@ object TerminalFontRenderer {
     /**
      * Spacing between the lines when rendered
      */
-    const val LINE_SPACING = 1
+    const val LINE_SPACING = 0
 
     /**
      * Map of all available characters and their index on the texture
      */
     private const val CHARACTERS =
-        """�ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß()[]{}.,;:!?<>=/\"'|#1234567890-+*$%@…_&~^ """
+        """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¥¦§¨ª¬°±²³´µ·¸¹º¿ÅÆÇ×ØÞßæçìíîïð÷øĄąĘęĢģĩīĭıĵĶķĻļŁłŅņŒœŞşťŮǐĵȘșȚțЀЁЂЃЄЅІЇЈЊЋЌЍЎЏАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшъыьэюяѐёђѓєѕіїјњћќѝўџҐґ€←↑→↓⇐⇑⇒⇓∀∷☺♥‘’“”„⁊‚†‡•′″‵‶‹›‼‽⁎⁏⁑⁒‑þ¯₡₢₣₤₥₮₰₲₵₶₸₹₼₿≠−∓∩∃∄∉∋∌⊂⊃⊄⊅∧∨⊻⊼⊽∥⋆∑⊤⊥⊢⊨∁∴∵∂⋃⊆⊇∫∮һІҮүӨөӀѲѳқғҰұӘәҺΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρςτυφχψ;·ϛ＋ƏƐƆƎɅǝƷǷƿȜȝȤȥǀǃǂǁƩƲƚƛȠƞƟƧƨƪƸƹƻƼƽƾȴȶȺȻȼɆȾɁɂəɛɪʔʕʬɔɟɥɾʞɯɹʇʌʍʎʒʙɢʜʟɴʀʏɱʈɡʡɕʑɸʝʢʁɦʋɰɬɮʘɓɧɫɨʊɘɵɤɜɞɑɒɺʗʖɭɿʅʓʚɼʻˌ˙ĸĲĳẞẟẜẝỼỽỾ⁰Ԁɐ֏ſᚠᴀႠჿⴀ₠⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁱ₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎Ⅎ⅁⅄⅋☲☵♀♂⚥♠♣♦♩♪♭♮♯⚡☺☹♤♧♡♢☰☱☳☴☶☷⚗אבגדהוזחטיכלמםנןסעפףצץקרשתך׳״װױײ־׃׆❣⸘⸮⸵⸸⹁⹋⥝ᘔᗺᗡ߈ㄥⱯⱦⱭꞰꞀꝹꞁꝚꝛꜰꞯꜱꜧꜦꞩᴚᵷᴉᴄᴅᴇᴊᴋᴍᴏᴘᴛᴜᴠᴡᴢ⟘ԱԲԶԷԻԼԾԿՀՁՃՅՆՇՈՉՋՍՎՏՐՑՒՓՔՕՖՙաբեէըթիլծկհձճյշոչպջռսրցւօֆԸ՚՛՜՝՞՟ՠԵՊ֊⏏⏴⏵⏶⏷⏸⏹⏺⏽⏳▲▼●◦◘□△▽◆◇○ﬁﬅתּשׂפֿפּכּײַיִוֹוּבֿבּᚢᚣᚤᚥᚦᚧᚨᚩᚪᚫᚬᚭᚮᚯᚰᚱᚲᚳᚴᚶᚷᚸᚹᚺᚻᚼᚽᚾᚿᛀᛁᛂᛄᛅᛆᛇᛈᛉᛊᛋᛌᛍᛎᛏᛐᛑᛒᛓᛔᛕᛖᛗᛘᛙᛚᛛᛜᛝᛞᛡᛣᛤᛥᛦᛧᛨᛩ᛫᛬᛭ᛮᛯᛰᛱᛲᛴᛵᛶᛷᛸႣႤႨႩႬႱႲႴႵႶႷႸႹႺႼႽႾႿჁჂჃჄჇჍაბგდევზთიკმნოპჟრსტუფქღყშჩცძწჭხჯჰჲჳჴჵჶჷჸჹჺ჻ჼჽჾⴃⴄⴅⴡⴇⴈⴉⴊⴋⴌⴢⴍⴐⴑⴒⴣⴓⴔⴕⴖⴗⴘⴙⴚⴛⴜⴞⴤⴟⴠⴥ〒"""
 
     private var showCursorUntilNextCycle = false
 
@@ -89,14 +89,13 @@ object TerminalFontRenderer {
                 }
             }
 
-            val textureIndex = (getTextureIndex(char) ?: getUnknownCharacterIndex()).toFloat()
+            val (u, v) = (getTextureUV(char) ?: getUnknownCharacterUV())
 
             graphics.blit(
                 FONT,
                 currentX,
                 currentY,
-                textureIndex,
-                0F,
+                u, v,
                 CHAR_WIDTH,
                 CHAR_HEIGHT,
                 FONT_WIDTH,
@@ -152,16 +151,20 @@ object TerminalFontRenderer {
      *
      * Returns `null` if the character doesn't exist.
      */
-    private fun getTextureIndex(char: Char): Int? {
+    private fun getTextureUV(char: Char): Pair<Float, Float>? {
         return CHARACTERS.indexOf(char).let { index ->
-            if (index == -1) null else index * CHAR_WIDTH
+            if (index == -1) {
+                null
+            } else {
+                (index * CHAR_WIDTH % FONT_WIDTH).toFloat() to (index * CHAR_WIDTH / FONT_WIDTH * CHAR_HEIGHT).toFloat()
+            }
         }
     }
 
     /**
      * Returns the index of the unknown character (� in ASCII) in the font file
      */
-    private fun getUnknownCharacterIndex(): Int {
-        return getTextureIndex('�')!!
+    private fun getUnknownCharacterUV(): Pair<Float, Float> {
+        return getTextureUV('◘')!! // TODO: unknown character
     }
 }
