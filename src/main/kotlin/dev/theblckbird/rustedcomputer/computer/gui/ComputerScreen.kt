@@ -1,14 +1,18 @@
 package dev.theblckbird.rustedcomputer.computer.gui
 
+import dev.theblckbird.rustedcomputer.ModBlocks
 import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.closescreen.CloseScreenRequest
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.openscreen.OpenScreenRequest
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.stdin.StdinData
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.BlockPos
+import net.minecraft.core.component.DataComponentMap
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.network.PacketDistributor
 
 class ComputerScreen(val computerPosition: BlockPos) :

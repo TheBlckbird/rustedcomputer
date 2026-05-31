@@ -18355,5 +18355,19 @@
 		],
 		"group": "standard_galactic_alphabet",
 		"character": ""
+	},
+	{
+		"codepoint": 65533,
+		"name": "replacement_character",
+		"pixels": [
+			[1, 1, 1, 1, 1],
+			[1, 0, 0, 0, 1],
+			[1, 0, 0, 0, 1],
+			[1, 0, 0, 0, 1],
+			[1, 0, 0, 0, 1],
+			[1, 0, 0, 0, 1],
+			[1, 1, 1, 1, 1]
+		],
+		"character": "�"
 	}
 ]

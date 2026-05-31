@@ -79,7 +79,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         if let Some(pixels) = &character.pixels {
-            if (pixels[0].len() as u32 > CHAR_WIDTH) {
+            if (pixels[0].len() as u32 > CHAR_WIDTH
+                || (character.character != " " && all_are_null(pixels)))
+            {
                 continue 'character_loop;
             }
 
@@ -161,4 +163,16 @@ fn write_bitmap(
             }
         }
     }
+}
+
+fn all_are_null(bitmap: &[Vec<u8>]) -> bool {
+    for row in bitmap {
+        for pixel in row {
+            if (*pixel == 1) {
+                return false;
+            }
+        }
+    }
+
+    true
 }
