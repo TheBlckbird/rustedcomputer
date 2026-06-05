@@ -87,6 +87,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
             write_bitmap(&mut image, pixels, DIACRITIC_HEIGHT, &current_x, &current_y);
         } else if let Some(diacritic) = &character.diacritic {
+            // TODO: diacritic spacing based on first non empty row
             let diacritic = &diacritics.get(diacritic).as_ref().unwrap().pixels;
 
             write_bitmap(

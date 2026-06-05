@@ -73,13 +73,18 @@ object TerminalFontRenderer {
         text: String,
         x: Int, y: Int,
         width: Int, height: Int,
+        charsPersLine: Int,
     ) {
         graphics.pose().pushPose()
         var currentX = x
         var currentY = y
 
+        var currentChar = 0
+
         for (char in text) {
-            if (char == '\n' || (currentX + CHAR_SPACING + CHAR_SPACING) > width) {
+            if (char == '\n' || currentChar == charsPersLine) {
+                currentChar = 0
+
                 currentY += CHAR_HEIGHT + LINE_SPACING
                 currentX = x
                 if (currentY > height) {
@@ -89,6 +94,7 @@ object TerminalFontRenderer {
                 }
             }
 
+            currentChar += 1
             val (u, v) = (getTextureUV(char) ?: getUnknownCharacterUV())
 
             graphics.blit(

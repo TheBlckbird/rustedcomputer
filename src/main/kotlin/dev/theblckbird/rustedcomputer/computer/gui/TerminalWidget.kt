@@ -57,6 +57,7 @@ class TerminalWidget(
             terminal.stdout + terminal.stdin,
             innerX, innerY,
             innerWidth, innerHeight,
+            terminal.characters,
         )
 
         if (isFocused) {
@@ -104,6 +105,8 @@ class TerminalWidget(
 
             InputConstants.KEY_LEFT -> terminal.moveCursorLeft()
             InputConstants.KEY_RIGHT -> terminal.moveCursorRight()
+            InputConstants.KEY_UP -> terminal.moveCursorUp()
+            InputConstants.KEY_DOWN -> terminal.moveCursorDown()
         }
 
         return false

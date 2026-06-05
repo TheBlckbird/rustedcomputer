@@ -1,18 +1,14 @@
 package dev.theblckbird.rustedcomputer.computer.gui
 
-import dev.theblckbird.rustedcomputer.ModBlocks
 import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.closescreen.CloseScreenRequest
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.openscreen.OpenScreenRequest
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.stdin.StdinData
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.BlockPos
-import net.minecraft.core.component.DataComponentMap
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.network.PacketDistributor
 
 class ComputerScreen(val computerPosition: BlockPos) :
@@ -25,7 +21,7 @@ class ComputerScreen(val computerPosition: BlockPos) :
         private const val BACKGROUND_HEIGHT = 253
         private const val MARGIN = 17
 
-        private const val TERMINAL_CHARACTERS = 80
+        private const val TERMINAL_CHARACTERS = 60
         private const val TERMINAL_LINES = 22
 
         const val X = 10

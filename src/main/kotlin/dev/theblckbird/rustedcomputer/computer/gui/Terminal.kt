@@ -10,103 +10,200 @@ class Terminal(
      */
     val lines: Int,
 ) {
-    private var _stdout = ""
-    val stdout get() = _stdout
-    private var _stdin = ""
-    val stdin get() = _stdin
+    var stdout = ""
+        private set
+
+    var stdin = ""
+        private set
+
+    private var cursorIndex = 0
+    private var preferredColumn = 0
 
     /**
-     * Current character the cursor is at (zero-index)
+     * Current character in the wrapped line the cursor is at (zero-index)
      */
-    private var _cursorChar = 0
+    var cursorChar = 0
+        private set
 
     /**
-     * Current character the cursor is at (zero-index)
+     * Current wrapped line the cursor is at (zero-index)
      */
-    val cursorChar get() = _cursorChar
+    var cursorLine = 0
+        private set
 
-    /**
-     * Current line the cursor is at (zero-index)
-     */
-    private var _cursorLine = 0
-
-    /**
-     * Current character the cursor is at (zero-index)
-     */
-    val cursorLine get() = _cursorLine
+    init {
+        syncCursorFromIndex()
+    }
 
     fun clearStdout() {
-        _stdout = ""
+        stdout = ""
     }
 
     fun clearStdin() {
-        _stdin = ""
+        stdin = ""
+        cursorIndex = 0
+        preferredColumn = 0
+        syncCursorFromIndex()
     }
 
     fun appendStdout(str: String) {
-        _stdout += str
+        stdout += str
     }
 
     fun insertStdin(str: String) {
-        _stdin = _stdin.replaceRange(_cursorChar, _cursorChar, str)
-
-        for (i in 0..str.count()) {
-            moveCursorRight()
-        }
+        stdin = stdin.replaceRange(cursorIndex, cursorIndex, str)
+        cursorIndex += str.length
+        syncCursorFromIndex()
+        preferredColumn = cursorChar
     }
 
     fun insertStdin(char: Char) {
-        _stdin = _stdin.replaceRange(_cursorChar, _cursorChar, char.toString())
-        moveCursorRight()
+        insertStdin(char.toString())
     }
 
     /**
-     * Removes the last char at the current cursor position and moves the cursor back
+     * Removes the char before the current cursor position and moves the cursor back
      */
     fun backspaceStdin() {
-        if (_cursorChar != 0) {
-            _stdin = _stdin.removeRange(_cursorChar - 1, _cursorChar)
-            moveCursorLeft()
-        }
+        if (cursorIndex == 0) return
+
+        stdin = stdin.removeRange(cursorIndex - 1, cursorIndex)
+        cursorIndex -= 1
+        syncCursorFromIndex()
+        preferredColumn = cursorChar
     }
 
     fun newlineStdin() {
-        _stdin += '\n'
+        insertStdin('\n')
     }
 
     fun moveCursorLeft() {
-        _cursorChar -= 1
-
-        if (_cursorChar < 0) {
-            _cursorChar = 0
+        if (cursorIndex > 0) {
+            cursorIndex -= 1
+            syncCursorFromIndex()
+            preferredColumn = cursorChar
         }
-
-        /*if (_cursorChar < 0) {
-            if (_cursorLine > 0) {
-                _cursorLine -= 1
-                _cursorChar = _stdin.lines()[_cursorLine].count()
-            } else {
-                _cursorChar += 1
-            }
-        }*/
     }
 
     fun moveCursorRight() {
-        _cursorChar += 1
+        if (cursorIndex < stdin.length) {
+            cursorIndex += 1
+            syncCursorFromIndex()
+            preferredColumn = cursorChar
+        }
+    }
 
-        if (_cursorChar > _stdin.count()) {
-            _cursorChar -= 1
+    fun moveCursorUp() {
+        val segments = wrappedSegments()
+        if (segments.isEmpty()) return
+
+        val currentSegmentIndex = segmentIndexAtCursor(segments)
+        if (currentSegmentIndex <= 0) return
+
+        val target = segments[currentSegmentIndex - 1]
+        cursorIndex = (target.start + minOf(preferredColumn, target.length)).coerceIn(target.start, target.end)
+        syncCursorFromIndex()
+    }
+
+    fun moveCursorDown() {
+        val segments = wrappedSegments()
+        if (segments.isEmpty()) return
+
+        val currentSegmentIndex = segmentIndexAtCursor(segments)
+        if (currentSegmentIndex >= segments.lastIndex) return
+
+        val target = segments[currentSegmentIndex + 1]
+        cursorIndex = (target.start + minOf(preferredColumn, target.length)).coerceIn(target.start, target.end)
+        syncCursorFromIndex()
+    }
+
+    private fun syncCursorFromIndex() {
+        cursorIndex = cursorIndex.coerceIn(0, stdin.length)
+
+        val segments = wrappedSegments()
+        if (segments.isEmpty()) {
+            cursorLine = 0
+            cursorChar = 0
+            return
         }
 
-        /*val stdinLines = _stdin.lines()
+        val segmentIndex = segmentIndexAtCursor(segments)
+        val segment = segments[segmentIndex]
 
-        if (_cursorChar > stdinLines[_cursorLine].count()) {
-            if (_cursorLine == stdinLines.count()) {
-                _cursorChar -= 1
-            } else {
-                _cursorChar = 0
-                _cursorLine += 1
+        cursorLine = segmentIndex
+        cursorChar = (cursorIndex - segment.start).coerceIn(0, segment.length)
+
+        if (cursorChar == characters) {
+            cursorLine += 1
+            cursorChar = 0
+        }
+    }
+
+    private fun segmentIndexAtCursor(segments: List<Segment>): Int {
+        for ((index, segment) in segments.withIndex()) {
+            if (cursorIndex in segment.start..segment.end) {
+                return index
             }
-        }*/
+        }
+
+        return segments.lastIndex
+    }
+
+    /**
+     * Get the stdin as a list of segments with line wrapping enabled
+     */
+    private fun wrappedSegments(): List<Segment> {
+        val width = characters.coerceAtLeast(1)
+        val result = mutableListOf<Segment>()
+
+        var lineStart = 0
+        var column = 0
+        var i = 0
+
+        if (stdin.isEmpty()) {
+            result += Segment(0, 0)
+            return result
+        }
+
+        while (i < stdin.length) {
+            val char = stdin[i]
+
+            if (char == '\n') {
+                result += Segment(lineStart, i)
+                lineStart = i + 1
+                column = 0
+                i += 1
+
+                if (i == stdin.length) {
+                    result += Segment(i, i)
+                }
+                continue
+            }
+
+            if (column == width) {
+                result += Segment(lineStart, i)
+                lineStart = i
+                column = 0
+
+                continue
+            }
+
+            column += 1
+            i += 1
+        }
+
+        if (lineStart <= stdin.length) {
+            result += Segment(lineStart, stdin.length)
+        }
+
+        return result
+    }
+
+    private data class Segment(
+        val start: Int,
+        val end: Int,
+    ) {
+        val length: Int
+            get() = end - start
     }
 }
