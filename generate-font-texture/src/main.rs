@@ -87,16 +87,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
             write_bitmap(&mut image, pixels, DIACRITIC_HEIGHT, &current_x, &current_y);
         } else if let Some(diacritic) = &character.diacritic {
-            // TODO: diacritic spacing based on first non empty row
-            let diacritic = &diacritics.get(diacritic).as_ref().unwrap().pixels;
-
-            write_bitmap(
-                &mut image,
-                diacritic,
-                (DIACRITIC_HEIGHT - diacritic.len() as u32),
-                &current_x,
-                &current_y,
-            );
+            let diacritic_space = character.diacritic_space.unwrap() as u32;
 
             let reference = character.reference.unwrap();
             let referenced_character = characters
@@ -104,10 +95,41 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .find(|character| character.codepoint == reference)
                 .unwrap();
 
+            let mut pixels = referenced_character.pixels.clone().unwrap();
+
+            let mut empty_rows = 0;
+
+            for row in &pixels {
+                if row.contains(&1) {
+                    break;
+                } else {
+                    empty_rows += 1;
+                }
+            }
+
+            let diacritic = &diacritics.get(diacritic).as_ref().unwrap().pixels;
+            let diacritic = [
+                vec![vec![0; CHAR_WIDTH as usize]; empty_rows],
+                diacritic.clone(),
+            ]
+            .concat();
+
             write_bitmap(
                 &mut image,
-                referenced_character.pixels.as_ref().unwrap(),
-                DIACRITIC_HEIGHT,
+                &diacritic,
+                ((DIACRITIC_HEIGHT + empty_rows as u32) - diacritic.len() as u32 - diacritic_space),
+                &current_x,
+                &current_y,
+            );
+
+            for _ in 0..empty_rows {
+                pixels.remove(0);
+            }
+
+            write_bitmap(
+                &mut image,
+                &pixels,
+                DIACRITIC_HEIGHT + empty_rows as u32,
                 &current_x,
                 &current_y,
             );

@@ -2578,6 +2578,54 @@
 		"diacriticSpace": 1
 	},
 	{
+		"character": "Ä",
+		"name": "latin_capital_letter_a_with_diaeresis",
+		"codepoint": 196,
+		"reference": 65,
+		"diacritic": "diaeresis",
+		"diacriticSpace": 1
+	},
+	{
+		"character": "Ö",
+		"name": "latin_capital_letter_o_with_diaeresis",
+		"codepoint": 214,
+		"reference": 79,
+		"diacritic": "diaeresis",
+		"diacriticSpace": 1
+	},
+	{
+		"character": "Ü",
+		"name": "latin_capital_letter_u_with_diaeresis",
+		"codepoint": 220,
+		"reference": 85,
+		"diacritic": "diaeresis",
+		"diacriticSpace": 1
+	},
+	{
+		"character": "ä",
+		"name": "latin_small_letter_a_with_diaeresis",
+		"codepoint": 228,
+		"reference": 97,
+		"diacritic": "diaeresis",
+		"diacriticSpace": 1
+	},
+	{
+		"character": "ö",
+		"name": "latin_small_letter_o_with_diaeresis",
+		"codepoint": 246,
+		"reference": 111,
+		"diacritic": "diaeresis",
+		"diacriticSpace": 1
+	},
+	{
+		"character": "ü",
+		"name": "latin_small_letter_u_with_diaeresis",
+		"codepoint": 252,
+		"reference": 117,
+		"diacritic": "diaeresis",
+		"diacriticSpace": 1
+	},
+	{
 		"character": "Ђ",
 		"name": "cyrillic_capital_letter_dje",
 		"codepoint": 1026,

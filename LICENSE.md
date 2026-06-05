@@ -6,7 +6,7 @@ This license applies to the following files and directories:
 - ./generate-font-texture/font-src/
 - ./src/main/resources/assets/rustedcomputer/textures/gui/terminal_font.png
 
-Copyright (c) 2022, Idrees Hassan (https://github.com/IdreesInc/Monocraft)
+Copyright (c) 2022, Idrees Hassan (https://github.com/IdreesInc/Monocraft), modified by TheBlckbird (https://github.com/TheBlckbird/rustedcomputer)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
