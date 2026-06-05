@@ -16,7 +16,7 @@ object TerminalFontRenderer {
     /**
      * Height of the cursor
      */
-    private const val CURSOR_HEIGHT = 10
+    private const val CURSOR_HEIGHT = 12
 
     /**
      * Length of a complete blink cycle in ticks
