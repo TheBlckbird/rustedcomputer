@@ -3,7 +3,9 @@ package dev.theblckbird.rustedcomputer.computer.gui
 import com.mojang.blaze3d.platform.InputConstants
 import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.gui.TerminalFontRenderer.CHAR_HEIGHT
+import dev.theblckbird.rustedcomputer.computer.gui.TerminalFontRenderer.CHAR_SPACING
 import dev.theblckbird.rustedcomputer.computer.gui.TerminalFontRenderer.CHAR_WIDTH
+import dev.theblckbird.rustedcomputer.computer.gui.TerminalFontRenderer.LINE_SPACING
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -20,12 +22,14 @@ class TerminalWidget(
     val onSubmit: (String) -> Unit,
     description: Component = Component.translatable("gui.${RustedComputer.MODID}.terminal"),
 ) : AbstractWidget(
-    x, y, terminal.characters * CHAR_WIDTH, terminal.lines * CHAR_HEIGHT, description,
+    x,
+    y,
+    terminal.characters * (CHAR_WIDTH + CHAR_SPACING) - CHAR_SPACING + 2 * margin,
+    terminal.lines * (CHAR_HEIGHT + LINE_SPACING) - LINE_SPACING + 2 * margin,
+    description,
 ) {
     private val innerX = x + margin
     private val innerY = y + margin
-    private val innerWidth = width - margin
-    private val innerHeight = height - margin
 
     private var frameTicks: Long = 0
 
@@ -56,8 +60,7 @@ class TerminalWidget(
             guiGraphics,
             terminal.stdout + terminal.stdin,
             innerX, innerY,
-            innerWidth, innerHeight,
-            terminal.characters,
+            terminal.characters, terminal.lines,
         )
 
         if (isFocused) {

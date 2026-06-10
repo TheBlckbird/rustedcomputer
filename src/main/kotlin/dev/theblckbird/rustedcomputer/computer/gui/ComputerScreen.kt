@@ -22,7 +22,7 @@ class ComputerScreen(val computerPosition: BlockPos) :
         private const val MARGIN = 17
 
         private const val TERMINAL_CHARACTERS = 60
-        private const val TERMINAL_LINES = 21
+        private const val TERMINAL_LINES = 17
 
         const val X = 10
         const val Y = 10

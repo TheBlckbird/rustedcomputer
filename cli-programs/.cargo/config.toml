@@ -1,0 +1,6 @@
+[target.wasm32-wasip1]
+rustflags = [
+    "-Clink-arg=--initial-memory=196608",
+    "-Clink-arg=--max-memory=1048576",
+    "-Clink-arg=-zstack-size=131072",
+]

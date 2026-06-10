@@ -141,12 +141,13 @@ class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: B
                     Instance
                         .builder(wasmModule)
                         .withImportValues(imports)
-                        .withMemoryLimits(MemoryLimits(17, 32))
+                        .withMemoryLimits(MemoryLimits(3, 16))
                         .build()
                 }
             }
         } else {
             writelnStdout("Can't find file $fileName")
+            writeStdout("> ")
         }
     }
 

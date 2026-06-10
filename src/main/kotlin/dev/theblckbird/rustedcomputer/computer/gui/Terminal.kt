@@ -32,26 +32,41 @@ class Terminal(
         private set
 
     init {
+        cursorIndex = displayPrefix().length
         syncCursorFromIndex()
     }
 
     fun clearStdout() {
         stdout = ""
+        cursorIndex = cursorIndex.coerceAtLeast(displayPrefix().length)
+        syncCursorFromIndex()
     }
 
     fun clearStdin() {
         stdin = ""
-        cursorIndex = 0
+        cursorIndex = displayPrefix().length
         preferredColumn = 0
         syncCursorFromIndex()
     }
 
     fun appendStdout(str: String) {
+        val wasAtEnd = cursorIndex == fullInput().length
+
         stdout += str
+
+        if (wasAtEnd) {
+            cursorIndex = fullInput().length
+        } else {
+            cursorIndex = cursorIndex.coerceAtLeast(displayPrefix().length)
+        }
+
+        syncCursorFromIndex()
+        preferredColumn = cursorChar
     }
 
     fun insertStdin(str: String) {
-        stdin = stdin.replaceRange(cursorIndex, cursorIndex, str)
+        val localIndex = (cursorIndex - displayPrefix().length).coerceIn(0, stdin.length)
+        stdin = stdin.replaceRange(localIndex, localIndex, str)
         cursorIndex += str.length
         syncCursorFromIndex()
         preferredColumn = cursorChar
@@ -65,9 +80,11 @@ class Terminal(
      * Removes the char before the current cursor position and moves the cursor back
      */
     fun backspaceStdin() {
-        if (cursorIndex == 0) return
+        val prefixLength = displayPrefix().length
+        if (cursorIndex <= prefixLength) return
 
-        stdin = stdin.removeRange(cursorIndex - 1, cursorIndex)
+        val localIndex = (cursorIndex - prefixLength).coerceIn(0, stdin.length)
+        stdin = stdin.removeRange(localIndex - 1, localIndex)
         cursorIndex -= 1
         syncCursorFromIndex()
         preferredColumn = cursorChar
@@ -78,7 +95,8 @@ class Terminal(
     }
 
     fun moveCursorLeft() {
-        if (cursorIndex > 0) {
+        val minIndex = displayPrefix().length
+        if (cursorIndex > minIndex) {
             cursorIndex -= 1
             syncCursorFromIndex()
             preferredColumn = cursorChar
@@ -86,7 +104,7 @@ class Terminal(
     }
 
     fun moveCursorRight() {
-        if (cursorIndex < stdin.length) {
+        if (cursorIndex < fullInput().length) {
             cursorIndex += 1
             syncCursorFromIndex()
             preferredColumn = cursorChar
@@ -94,7 +112,7 @@ class Terminal(
     }
 
     fun moveCursorUp() {
-        val segments = wrappedSegments()
+        val segments = wrappedSegments(fullInput())
         if (segments.isEmpty()) return
 
         val currentSegmentIndex = segmentIndexAtCursor(segments)
@@ -106,7 +124,7 @@ class Terminal(
     }
 
     fun moveCursorDown() {
-        val segments = wrappedSegments()
+        val segments = wrappedSegments(fullInput())
         if (segments.isEmpty()) return
 
         val currentSegmentIndex = segmentIndexAtCursor(segments)
@@ -118,9 +136,9 @@ class Terminal(
     }
 
     private fun syncCursorFromIndex() {
-        cursorIndex = cursorIndex.coerceIn(0, stdin.length)
+        cursorIndex = cursorIndex.coerceIn(displayPrefix().length, fullInput().length)
 
-        val segments = wrappedSegments()
+        val segments = wrappedSegments(fullInput())
         if (segments.isEmpty()) {
             cursorLine = 0
             cursorChar = 0
@@ -137,7 +155,24 @@ class Terminal(
             cursorLine += 1
             cursorChar = 0
         }
+
+        cursorLine += wrappedSegments(stdout).count() - 1
+
+        if (stdout.endsWith('\n')) {
+            cursorLine -= 1
+        }
     }
+
+    private fun displayPrefix(): String {
+        if (stdout.isEmpty()) return ""
+
+        val endsWithNewline = stdout.endsWith("\n") || stdout.endsWith("\r\n") || stdout.endsWith("\r")
+        if (endsWithNewline) return ""
+
+        return stdout.lines().lastOrNull().orEmpty()
+    }
+
+    private fun fullInput(): String = displayPrefix() + stdin
 
     private fun segmentIndexAtCursor(segments: List<Segment>): Int {
         for ((index, segment) in segments.withIndex()) {
@@ -152,7 +187,7 @@ class Terminal(
     /**
      * Get the stdin as a list of segments with line wrapping enabled
      */
-    private fun wrappedSegments(): List<Segment> {
+    private fun wrappedSegments(text: String): List<Segment> {
         val width = characters.coerceAtLeast(1)
         val result = mutableListOf<Segment>()
 
@@ -160,13 +195,13 @@ class Terminal(
         var column = 0
         var i = 0
 
-        if (stdin.isEmpty()) {
+        if (text.isEmpty()) {
             result += Segment(0, 0)
             return result
         }
 
-        while (i < stdin.length) {
-            val char = stdin[i]
+        while (i < text.length) {
+            val char = text[i]
 
             if (char == '\n') {
                 result += Segment(lineStart, i)
@@ -174,7 +209,7 @@ class Terminal(
                 column = 0
                 i += 1
 
-                if (i == stdin.length) {
+                if (i == text.length) {
                     result += Segment(i, i)
                 }
                 continue
@@ -192,8 +227,8 @@ class Terminal(
             i += 1
         }
 
-        if (lineStart <= stdin.length) {
-            result += Segment(lineStart, stdin.length)
+        if (lineStart <= text.length) {
+            result += Segment(lineStart, text.length)
         }
 
         return result
