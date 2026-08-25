@@ -31,6 +31,25 @@ class Terminal(
     var cursorLine = 0
         private set
 
+    val visibleSegments: List<String>
+        get() {
+            val fullText = stdout + stdin
+            var segments = wrappedSegments(fullText)
+
+            // TODO: scrolling
+            val scrolledLines = 0
+
+            if (segments.count() > lines + 1) {
+                segments = segments.slice(
+                    segments.count() - 1 - lines - scrolledLines..<segments.count() - scrolledLines
+                )
+            }
+
+            return segments.map {
+                fullText.slice(it.start..<it.end)
+            }
+        }
+
     init {
         cursorIndex = displayPrefix().length
         syncCursorFromIndex()
@@ -135,6 +154,10 @@ class Terminal(
         syncCursorFromIndex()
     }
 
+    fun scrollTerminal(lines: Int) {
+        TODO()
+    }
+
     private fun syncCursorFromIndex() {
         cursorIndex = cursorIndex.coerceIn(displayPrefix().length, fullInput().length)
 
@@ -161,6 +184,11 @@ class Terminal(
         if (stdout.endsWith('\n')) {
             cursorLine -= 1
         }
+
+        /*if (cursorLine > lines) {
+            cursorLine = lines
+            cursorChar = characters - 1
+        }*/
     }
 
     private fun displayPrefix(): String {
@@ -234,7 +262,7 @@ class Terminal(
         return result
     }
 
-    private data class Segment(
+    data class Segment(
         val start: Int,
         val end: Int,
     ) {

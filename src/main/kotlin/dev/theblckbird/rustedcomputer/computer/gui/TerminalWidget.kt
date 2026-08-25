@@ -13,6 +13,7 @@ import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
+import kotlin.math.roundToInt
 
 class TerminalWidget(
     x: Int,
@@ -58,7 +59,7 @@ class TerminalWidget(
     ) {
         TerminalFontRenderer.drawString(
             guiGraphics,
-            terminal.stdout + terminal.stdin,
+            terminal.visibleSegments.joinToString("\n"),
             innerX, innerY,
             terminal.characters, terminal.lines,
         )
@@ -119,5 +120,13 @@ class TerminalWidget(
         forceShowCursor = true
         terminal.insertStdin(codePoint)
         return true
+    }
+
+    override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
+        val perLine = 5
+        val lines = (scrollY / perLine).roundToInt()
+        RustedComputer.LOGGER.debug(lines.toString())
+
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)
     }
 }
