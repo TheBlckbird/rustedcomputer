@@ -1,10 +1,13 @@
 package dev.theblckbird.rustedcomputer.computer.gui
 
+import com.mojang.blaze3d.platform.InputConstants
 import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.closescreen.CloseScreenRequest
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.openscreen.OpenScreenRequest
 import dev.theblckbird.rustedcomputer.computer.networking.toserver.stdin.StdinData
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
@@ -29,6 +32,7 @@ class ComputerScreen(val computerPosition: BlockPos) :
     }
 
     lateinit var terminalWidget: TerminalWidget
+    lateinit var inputWidget: EditBox
     val terminal = Terminal(TERMINAL_CHARACTERS, TERMINAL_LINES)
 
     override fun init() {
@@ -45,12 +49,20 @@ class ComputerScreen(val computerPosition: BlockPos) :
             X, Y,
             MARGIN,
             terminal,
-            { stdin ->
-                PacketDistributor.sendToServer(StdinData(computerPosition, stdin))
-            }
         )
-
         this.addRenderableWidget(terminalWidget)
+
+        inputWidget = EditBox(
+            Minecraft.getInstance().font,
+            X + MARGIN,
+            Y + terminalWidget.height,
+            terminalWidget.width - 2 * MARGIN,
+            18,
+            Component.literal("Input..."),
+        )
+        inputWidget.setMaxLength(128)
+
+        this.addRenderableWidget(inputWidget)
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
@@ -78,8 +90,21 @@ class ComputerScreen(val computerPosition: BlockPos) :
         super.onClose()
     }
 
-    override fun tick() {
-        super.tick()
-        terminalWidget.tick()
+    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        val key = InputConstants.Type.KEYSYM.getOrCreate(keyCode)
+
+        if (inputWidget.isFocused && (key.value == InputConstants.KEY_RETURN || key.value == InputConstants.KEY_NUMPADENTER)) {
+            onSubmit()
+            return true
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers)
+    }
+
+    private fun onSubmit() {
+        val stdin = inputWidget.value
+        inputWidget.value = ""
+
+        PacketDistributor.sendToServer(StdinData(computerPosition, stdin))
     }
 }

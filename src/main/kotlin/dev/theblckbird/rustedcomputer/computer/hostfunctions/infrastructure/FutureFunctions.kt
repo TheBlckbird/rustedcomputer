@@ -12,11 +12,6 @@ import dev.theblckbird.rustedcomputer.computer.hostfunctions.HostFunctionsHelper
  */
 @HostModule("future")
 class FutureFunctions {
-    var gehalt = 3
-        set(value) {
-            if (value >= 0) gehalt = value
-        }
-
     /**
      * The client program has to deallocate the used memory.
      */
