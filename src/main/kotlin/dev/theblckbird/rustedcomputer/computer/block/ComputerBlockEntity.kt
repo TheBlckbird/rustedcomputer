@@ -2,12 +2,12 @@ package dev.theblckbird.rustedcomputer.computer.block
 
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Store
+import com.dylibso.chicory.wasi.WasiExitException
 import com.dylibso.chicory.wasi.WasiOptions
 import com.dylibso.chicory.wasi.WasiPreview1
 import com.dylibso.chicory.wasm.Parser
 import com.dylibso.chicory.wasm.WasmModule
 import com.dylibso.chicory.wasm.types.MemoryLimits
-import dev.theblckbird.rustedcomputer.ModBlockEntities
 import dev.theblckbird.rustedcomputer.RelativeDirection
 import dev.theblckbird.rustedcomputer.RustedComputer
 import dev.theblckbird.rustedcomputer.computer.ComputerObservations
@@ -18,10 +18,7 @@ import dev.theblckbird.rustedcomputer.computer.hostfunctions.infrastructure.Futu
 import dev.theblckbird.rustedcomputer.computer.hostfunctions.redstone.RedstoneFunctions
 import dev.theblckbird.rustedcomputer.computer.networking.toclient.stdout.StdoutData
 import dev.theblckbird.rustedcomputer.helpers.SaveFileHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -43,6 +40,11 @@ import kotlin.jvm.optionals.getOrNull
 
 class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: BlockState) :
     BlockEntity(type, position, state) {
+
+    companion object {
+        const val INPUT_PROMPT = "$ "
+    }
+
     var uuid = UUID.randomUUID()
     var powerLevels: HashMap<RelativeDirection, Int> = hashMapOf(
         RelativeDirection.TOP to 0,
@@ -53,7 +55,7 @@ class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: B
         RelativeDirection.BACK to 0,
     )
 
-    private var stdout = ""
+    private var stdout = INPUT_PROMPT
     private var stdoutWriter = ByteArrayOutputStream()
     private var stdoutLastLength = 0
     private var stdinWriter = PipedOutputStream()
@@ -141,12 +143,49 @@ class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: B
                     Instance
                         .builder(wasmModule)
                         .withImportValues(imports)
-                        .withMemoryLimits(MemoryLimits(17, 32))
+                        .withMemoryLimits(MemoryLimits(3, 16))
                         .build()
                 }
             }
+
+            var exitCode = 0
+
+            runner?.invokeOnCompletion { cause ->
+                when (cause) {
+                    null -> {
+                        // finished normally
+                    }
+
+                    is CancellationException -> {
+                        // stopped
+                        writelnStdout("Program stopped")
+                    }
+
+                    is WasiExitException -> {
+                        // exit code
+                        exitCode = cause.exitCode()
+                    }
+
+                    else -> {
+                        // threw with exception
+                        writelnStdout(cause.localizedMessage)
+                        exitCode = 1
+                    }
+                }
+
+                level.server.execute {
+                    flushStdout()
+
+                    var prefix = ""
+                    if (exitCode != 0) {
+                        prefix = "[$exitCode] "
+                    }
+
+                    writeStdout("$prefix$INPUT_PROMPT")
+                }
+            }
         } else {
-            writelnStdout("Can't find file $fileName")
+            writeStdout("Can't find file $fileName\n$INPUT_PROMPT")
         }
     }
 
@@ -167,11 +206,7 @@ class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: B
         super.setRemoved()
     }
 
-    fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: ComputerBlockEntity) {
-        if (level.isClientSide) {
-            return
-        }
-
+    fun flushStdout() {
         val output = stdoutWriter.toString()
 
         if (output.length > stdoutLastLength) {
@@ -179,12 +214,17 @@ class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: B
             stdoutLastLength = output.length
             stdout += newText
 
-            for (playerUuid in ComputerObservations.getListObserving(pos)) {
+            for (playerUuid in ComputerObservations.getListObserving(blockPos)) {
                 PacketDistributor.sendToPlayer(
-                    level.getPlayerByUUID(playerUuid) as ServerPlayer, StdoutData(pos, newText)
+                    level!!.getPlayerByUUID(playerUuid) as ServerPlayer, StdoutData(blockPos, newText)
                 )
             }
         }
+    }
+
+    fun tick(level: Level, pos: BlockPos, state: BlockState, blockEntity: ComputerBlockEntity) {
+        if (level.isClientSide) return
+        flushStdout()
     }
 
     /**
@@ -209,7 +249,21 @@ class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: B
     }
 
     fun writeStdin(content: String) {
-        stdinWriter.write(content.toByteArray())
+        writeStdout(content)
+
+        if (isProgramRunning()) {
+            stdinWriter.write(content.toByteArray())
+        } else {
+            val args = content.trim().split(" ")
+            var programName = args[0]
+
+            if (!programName.endsWith(".wasm")) {
+                programName += ".wasm"
+            }
+
+            startProgram(level!! as ServerLevel, programName, args)
+        }
+
     }
 
     fun getStdout(): String {
@@ -226,7 +280,7 @@ class ComputerBlockEntity(type: BlockEntityType<*>, position: BlockPos, state: B
         }
     }
 
-    fun writelnStdout(content: String) {
+    fun writelnStdout(content: String = "") {
         writeStdout("$content\n")
     }
 }

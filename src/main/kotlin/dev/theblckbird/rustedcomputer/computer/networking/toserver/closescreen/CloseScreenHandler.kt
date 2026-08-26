@@ -9,11 +9,7 @@ object CloseScreenHandler {
     fun handleRequest(data: CloseScreenRequest, context: IPayloadContext) {
         assert(!context.player().level().isClientSide)
 
-        val computer = ComputerBlock.getBlockEntity(context.player().level() as ServerLevel, data.computerPosition)
-
-        if (computer == null) {
-            return
-        }
+        ComputerBlock.getBlockEntity(context.player().level() as ServerLevel, data.computerPosition) ?: return
 
         ComputerObservations.removeObservingPlayer(context.player().uuid)
     }

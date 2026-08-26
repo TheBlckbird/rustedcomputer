@@ -3,8 +3,8 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.192'
     id 'idea'
-    id 'org.jetbrains.kotlin.jvm' version '2.1.21'
-    id 'org.jetbrains.kotlin.kapt' version '2.2.10'
+    id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
+    id 'org.jetbrains.kotlin.kapt' version "${kotlin_version}"
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -118,7 +118,7 @@ dependencies {
     // For all intends and purposes: You can treat this dependency as if it is a normal library you would use.
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    implementation 'thedarkcolour:kotlinforforge-neoforge:5.9.0'
+    implementation "thedarkcolour:kotlinforforge-neoforge:${kotlinforge_version}"
 
     implementation("com.dylibso.chicory:runtime:${chicory_version}")
     implementation("com.dylibso.chicory:wasi:${chicory_version}")

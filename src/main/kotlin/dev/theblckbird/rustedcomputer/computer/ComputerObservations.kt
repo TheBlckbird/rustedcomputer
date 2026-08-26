@@ -22,10 +22,7 @@ object ComputerObservations {
      * Gets the computer the player is currently observing or null.
      */
     fun getObservedComputer(playerUuid: UUID, level: ServerLevel): ComputerBlockEntity? {
-        val computerPosition = playersObservingComputers.get(playerUuid)
-        if (computerPosition == null) {
-            return null
-        }
+        val computerPosition = playersObservingComputers.get(playerUuid) ?: return null
 
         val computer = level.getBlockEntity(computerPosition)
 
@@ -40,7 +37,7 @@ object ComputerObservations {
      * Gets a list of the player's UUIDs currently observing a specific computer.
      */
     fun getListObserving(searchedComputerPosition: BlockPos): HashSet<UUID> {
-        var players = hashSetOf<UUID>()
+        val players = hashSetOf<UUID>()
 
         for ((playerUuid, computerPosition) in playersObservingComputers) {
             if (computerPosition == searchedComputerPosition) {

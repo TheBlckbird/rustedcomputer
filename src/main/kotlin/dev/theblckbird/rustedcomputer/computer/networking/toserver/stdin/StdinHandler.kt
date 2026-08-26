@@ -8,23 +8,9 @@ object StdinHandler {
     fun handleStdin(data: StdinData, context: IPayloadContext) {
         assert(!context.player().level().isClientSide)
 
-        val computer = ComputerBlock.getBlockEntity(context.player().level() as ServerLevel, data.computerPosition)
+        val computer =
+            ComputerBlock.getBlockEntity(context.player().level() as ServerLevel, data.computerPosition) ?: return
 
-        if (computer == null) {
-            return
-        }
-
-        if (computer.isProgramRunning()) {
-            computer.writeStdin(data.content)
-        } else {
-            val args = data.content.trim().split(" ")
-            var programName = args[0]
-
-            if (!programName.endsWith(".wasm")) {
-                programName += ".wasm"
-            }
-
-            computer.startProgram(context.player().level() as ServerLevel, programName, args)
-        }
+        computer.writeStdin(data.content + '\n')
     }
 }
