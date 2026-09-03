@@ -1,10 +1,10 @@
 pub use crate::error::*;
 
 pub mod async_runtime;
-pub mod side;
-pub mod functions;
 pub mod error;
+pub mod functions;
 pub mod http;
+pub mod side;
 mod wasm_helpers;
 
 #[unsafe(no_mangle)]

@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 
+#[repr(u8)]
 pub enum Side {
     Top,
     Bottom,

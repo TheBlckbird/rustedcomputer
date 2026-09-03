@@ -1,4 +1,4 @@
-use crate::async_runtime::RustedComputerFuture;
+use crate::async_runtime::future::RustedFuture;
 use crate::error::Result;
 use crate::side::Side;
 
@@ -7,10 +7,10 @@ pub async fn set_output(side: Side, power: u8) -> Result<()> {
     let side_length = side.len() as i32;
     let side_offset = side.as_ptr() as i32;
 
-    let caller = || unsafe { ext_set_output(side_length, side_offset, power as i32) }.into();
-    let converter = |_| ();
+    let caller =
+        || unsafe { extern_fns::set_output(side_length, side_offset, power as i32) }.into();
 
-    RustedComputerFuture::new(caller, converter).await
+    RustedFuture::without_converter(caller).await
 }
 
 pub async fn get_input(side: Side) -> Result<u8> {
@@ -18,17 +18,16 @@ pub async fn get_input(side: Side) -> Result<u8> {
     let side_length = side.len() as i32;
     let side_offset = side.as_ptr() as i32;
 
-    let caller = || unsafe { ext_get_input(side_length, side_offset) }.into();
-    let converter = |value: String| value.parse().unwrap();
+    let caller = || unsafe { extern_fns::get_input(side_length, side_offset) }.into();
+    let converter = |value: &[u8]| value[0];
 
-    RustedComputerFuture::new(caller, converter).await
+    RustedFuture::new(caller, converter).await
 }
 
-#[link(wasm_import_module = "redstone")]
-unsafe extern "C" {
-    #[link_name = "set_output"]
-    fn ext_set_output(side_length: i32, side_offset: i32, power: i32) -> i32;
-
-    #[link_name = "get_input"]
-    fn ext_get_input(side_length: i32, side_offset: i32) -> i32;
+mod extern_fns {
+    #[link(wasm_import_module = "redstone")]
+    unsafe extern "C" {
+        pub unsafe fn set_output(side_length: i32, side_offset: i32, power: i32) -> i32;
+        pub unsafe fn get_input(side_length: i32, side_offset: i32) -> i32;
+    }
 }

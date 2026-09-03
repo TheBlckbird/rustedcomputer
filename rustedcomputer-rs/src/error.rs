@@ -1,7 +1,7 @@
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum RustedComputerError {
+pub enum RustedError {
     #[error("Future failed to resolve")]
     FutureFailed,
     #[error("Future had a timeout")]
@@ -18,10 +18,10 @@ pub enum RustedComputerError {
     Security,
 }
 
-impl From<http::Error> for RustedComputerError {
+impl From<http::Error> for RustedError {
     fn from(value: http::Error) -> Self {
         Self::HttpError(value)
     }
 }
 
-pub type Result<T, E = RustedComputerError> = std::result::Result<T, E>;
+pub type Result<T, E = RustedError> = std::result::Result<T, E>;

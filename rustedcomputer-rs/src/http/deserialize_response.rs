@@ -1,7 +1,7 @@
+use crate::error::RustedError;
 use crate::http::headers::deserialize_headers::deserialize_headers;
 use http::Response;
 use std::slice;
-use crate::error::RustedComputerError;
 
 pub fn deserialize_response(raw_response: &[u8]) -> crate::Result<Response<String>> {
     let mut raw_response = raw_response.iter();
@@ -9,14 +9,15 @@ pub fn deserialize_response(raw_response: &[u8]) -> crate::Result<Response<Strin
     let is_success = char::from(*raw_response.next().unwrap()) == 'S';
 
     if !is_success {
-        let error_identifier = str::from_utf8(raw_response.as_slice()).expect("This result shouldn't be sent from Java.");
+        let error_identifier = str::from_utf8(raw_response.as_slice())
+            .expect("This result shouldn't be sent from Java.");
 
         return Err(match error_identifier {
-            "IO" => RustedComputerError::IO,
-            "C" => RustedComputerError::Connect,
-            "I" => RustedComputerError::Interrupted,
-            "S" => RustedComputerError::Security,
-            _ => unreachable!()
+            "IO" => RustedError::IO,
+            "C" => RustedError::Connect,
+            "I" => RustedError::Interrupted,
+            "S" => RustedError::Security,
+            _ => unreachable!(),
         });
     }
 
@@ -49,7 +50,7 @@ pub fn deserialize_response(raw_response: &[u8]) -> crate::Result<Response<Strin
         }
     }
 
-    response_builder.body(body).map_err(RustedComputerError::from)
+    response_builder.body(body).map_err(RustedError::from)
 }
 
 fn take_next_u32(raw_response: &mut slice::Iter<u8>) -> u32 {
