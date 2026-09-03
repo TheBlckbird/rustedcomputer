@@ -7,6 +7,9 @@ pub mod http;
 pub mod side;
 mod wasm_helpers;
 
+#[cfg(feature = "macros")]
+pub use rusted_macros::async_main_fn as main;
+
 #[unsafe(no_mangle)]
 pub extern "C" fn alloc(length: i32) -> i32 {
     let buffer = vec![0u8; length as usize];
