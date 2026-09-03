@@ -1,0 +1,12 @@
+[package]
+name = "rusted_macros"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+quote = "1.0"
+syn = { version = "3.0", features = ["full"] }
+proc-macro2 = "1.0"
+
+[lib]
+proc-macro = true

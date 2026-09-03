@@ -1,11 +1,14 @@
 pub use crate::error::*;
 
 pub mod async_runtime;
-pub mod side;
-pub mod functions;
 pub mod error;
+pub mod functions;
 pub mod http;
+pub mod side;
 mod wasm_helpers;
+
+#[cfg(feature = "macros")]
+pub use rusted_macros::async_main_fn as main;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn alloc(length: i32) -> i32 {
