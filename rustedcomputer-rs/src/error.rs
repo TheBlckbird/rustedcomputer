@@ -6,6 +6,10 @@ pub enum RustedError {
     FutureFailed,
     #[error("Future had a timeout")]
     FutureTimeout,
+    #[error("The future id was not found")]
+    UnknownFutureId,
+    #[error("The received future status {0} is not known")]
+    FutureUnexpectedStatus(u8),
     #[error("HTTP Error: {0}")]
     HttpError(http::Error),
     #[error("HTTP Connection Issue")]

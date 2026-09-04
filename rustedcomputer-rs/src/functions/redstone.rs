@@ -19,7 +19,7 @@ pub async fn get_input(side: Side) -> Result<u8> {
     let side_offset = side.as_ptr() as i32;
 
     let caller = || unsafe { extern_fns::get_input(side_length, side_offset) }.into();
-    let converter = |value: &[u8]| value[0];
+    let converter = |value: Option<&[u8]>| value.unwrap()[0];
 
     RustedFuture::new(caller, converter).await
 }
